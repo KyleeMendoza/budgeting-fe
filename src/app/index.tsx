@@ -53,8 +53,8 @@ export default function Page() {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
-      primary: "tomato",
-      secondary: "yellow",
+      primary: "#5AB334",
+      secondary: "#001229",
     },
   };
 
