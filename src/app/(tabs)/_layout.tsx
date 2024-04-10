@@ -9,27 +9,28 @@ import { Text } from "react-native";
 import { useSession } from "../ctx";
 
 export default function TabLayout() {
-  const { session, isLoading } = useSession();
+  // const { session, isLoading } = useSession();
 
-  if (isLoading) {
-    return <Text>Loading...</Text>;
-  }
+  // if (isLoading) {
+  //   return <Text>Loading...</Text>;
+  // }
 
-  if (!session) {
-    return <Redirect href="/login" />;
-  }
+  // if (!session) {
+  //   return <Redirect href="/login" />;
+  // }
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "blue",
+        tabBarActiveTintColor: "#00bfa5",
         tabBarStyle: {
           height: 70,
           width: "100%",
           borderTopRightRadius: 20,
           borderTopLeftRadius: 20,
           paddingVertical: 10,
-          backgroundColor: "lightblue",
+          borderColor: "black",
+          borderWidth: 1,
           alignSelf: "center",
         },
       }}

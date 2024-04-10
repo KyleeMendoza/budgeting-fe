@@ -54,7 +54,7 @@ export default function Page() {
     colors: {
       ...DefaultTheme.colors,
       primary: "#5AB334",
-      secondary: "#001229",
+      secondary: "#81cc2a",
     },
   };
 
