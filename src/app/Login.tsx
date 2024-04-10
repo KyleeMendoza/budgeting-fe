@@ -150,7 +150,7 @@ export default function login() {
               style={{
                 borderRadius: 20,
                 paddingVertical: 5,
-                backgroundColor: "#5AB334",
+                backgroundColor: "#00bfa5",
               }}
               labelStyle={{ fontSize: 16 }}
             >
