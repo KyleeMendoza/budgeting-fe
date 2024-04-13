@@ -2,6 +2,7 @@ import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import { Tabs, Redirect } from "expo-router";
 import { Text } from "react-native";
 
@@ -48,11 +49,11 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="analytics"
+        name="wallet"
         options={{
-          title: "Analytics",
+          title: "Wallet",
           tabBarIcon: ({ color }) => (
-            <FontAwesome6 size={28} name="chart-simple" color={color} />
+            <FontAwesome6 size={28} name="wallet" color={color} />
           ),
           headerShown: false,
           tabBarLabel: "",
@@ -60,11 +61,23 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="wallet"
+        name="create_expense"
         options={{
-          title: "Wallet",
+          title: "Create",
           tabBarIcon: ({ color }) => (
-            <FontAwesome6 size={28} name="wallet" color={color} />
+            <AntDesign size={28} name="pluscircleo" color={color} />
+          ),
+          headerShown: false,
+          tabBarLabel: "",
+        }}
+      />
+
+      <Tabs.Screen
+        name="analytics"
+        options={{
+          title: "Analytics",
+          tabBarIcon: ({ color }) => (
+            <FontAwesome6 size={28} name="chart-simple" color={color} />
           ),
           headerShown: false,
           tabBarLabel: "",
