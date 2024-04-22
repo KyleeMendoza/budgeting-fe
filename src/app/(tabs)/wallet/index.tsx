@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Piechart from "@/components/Piechart";
 import { DropDown } from "@/components/DropDown";
+import ProgressCircle from "@/components/ProgressCircle";
 
 const data = [
   {
@@ -67,16 +68,17 @@ export default function wallet() {
         <View className="main-container size-full flex items-center p-5 gap-8 bg-background">
           <View className="w-full  flex gap-4">
             <View className="w-full flex flex-row justify-between items-center">
-              <Text className="font-['Poppins-Bold'] text-xl">Expenses</Text>
-              <View className="w-1/3">
-                <DropDown />
-              </View>
+              <Text className="font-['Poppins-Bold'] text-xl">
+                Budget Summary
+              </Text>
+              <View className="w-1/3">{/* <DropDown /> */}</View>
             </View>
-            <View className="w-full h-80 rounded-2xl">
-              <Piechart />
+            <View className="w-full h-72 rounded-2xl">
+              {/* <Piechart /> */}
+              <ProgressCircle />
             </View>
           </View>
-          <View className="w-full flex flex-row gap-4">
+          {/* <View className="w-full flex flex-row gap-4">
             <View className="flex-1 rounded-lg flex justify-center items-center bg-['#00bfa5'] py-4">
               <Text className="font-['Poppins-Regular'] text-white">
                 Total Income:
@@ -90,10 +92,10 @@ export default function wallet() {
                 Total Expense:
               </Text>
               <Text className="font-['Poppins-Bold'] text-2xl text-white">
-                P40,000
+                P25,000
               </Text>
             </View>
-          </View>
+          </View> */}
           <View className="statements-container w-full px-2 gap-3">
             <View className="flex flex-row justify-between items-center ">
               <Text className="font-['Poppins-Bold']">My Statements</Text>
