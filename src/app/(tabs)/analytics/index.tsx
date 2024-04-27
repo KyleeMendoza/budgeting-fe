@@ -17,11 +17,14 @@ export default function analytics() {
       <ScrollView>
         <View className="main-container size-full flex items-center p-5 gap-8 bg-background">
           <View className="w-full flex gap-10">
-            <View className="w-full flex flex-row justify-between items-center mb-2">
+            <View className="w-full flex flex-row justify-between items-center">
               <Text className="font-['Poppins-Bold'] text-xl">Analytics</Text>
               <View className="w-1/3">
                 <DropDown />
               </View>
+            </View>
+            <View className="piechart-container w-full h-80 rounded-2xl">
+              <Piechart />
             </View>
             <View className="card-container w-full flex flex-row gap-4">
               <View className="flex-1 rounded-lg flex justify-center items-center bg-['#00bfa5'] py-4">
@@ -41,10 +44,10 @@ export default function analytics() {
                 </Text>
               </View>
             </View>
-            <View className="piechart-container w-full h-80 rounded-2xl">
-              <Piechart />
-            </View>
-            <View className="piechart-container w-full h-80 rounded-2xl">
+            <View className="area-container w-full h-80 rounded-2xl">
+              <Text className="font-['Poppins-Bold'] text-lg">
+                Budget Projection
+              </Text>
               <ForecastLineChart />
               {/* FIX: fix the scrollable line graph */}
             </View>

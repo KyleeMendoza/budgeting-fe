@@ -67,9 +67,14 @@ export default function home() {
     >
       <ScrollView>
         <View className="main-container size-full flex items-center p-5 gap-8 bg-background">
-          <View className="info-container w-full">
-            <Text className="font-['Poppins-Regular'] text-lg">Welcome,</Text>
-            <Text className="font-['Poppins-Bold'] text-xl">Josh Mojica.</Text>
+          <View className="info-container w-full flex flex-row justify-between items-center ">
+            <View>
+              <Text className="font-['Poppins-Regular'] text-lg">Welcome,</Text>
+              <Text className="font-['Poppins-Bold'] text-xl">
+                Josh Mojica.
+              </Text>
+            </View>
+            <Ionicons size={28} name="notifications" color="#00bfa5" />
           </View>
           <LinearGradient
             colors={["#00bfa5", "#004d40"]}

@@ -5,7 +5,10 @@ export default function Layout() {
   // headerShown: false
   return (
     <Stack>
-      <Stack.Screen name="index" options={{ headerTitle: "Create" }} />
+      <Stack.Screen
+        name="index"
+        options={{ headerTitle: "Create", headerShown: false }}
+      />
     </Stack>
   );
 }

@@ -6,8 +6,9 @@ export default function Layout() {
   return (
     <SessionProvider>
       <Stack>
-        {/* <Stack.Screen name="login" options={{ headerShown: false }} />
-        <Stack.Screen name="register" options={{ headerShown: false }} /> */}
+        {/* TODO: Comment this out to remove auth */}
+        <Stack.Screen name="login" options={{ headerShown: false }} />
+        <Stack.Screen name="register" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
     </SessionProvider>

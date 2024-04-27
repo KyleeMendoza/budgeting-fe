@@ -105,6 +105,8 @@ export default function login() {
                     onBlur={onBlur}
                     theme={{ roundness: 50 }}
                     activeOutlineColor="#1bcf9a"
+                    outlineStyle={{ backgroundColor: "white" }}
+                    contentStyle={{ color: "black" }}
                   />
                 )}
                 name="email"
@@ -129,6 +131,8 @@ export default function login() {
                     theme={{ roundness: 50 }}
                     activeOutlineColor="#1bcf9a"
                     secureTextEntry
+                    outlineStyle={{ backgroundColor: "white" }}
+                    contentStyle={{ color: "black" }}
                   />
                 )}
                 name="password"
@@ -152,7 +156,7 @@ export default function login() {
                 paddingVertical: 5,
                 backgroundColor: "#00bfa5",
               }}
-              labelStyle={{ fontSize: 16 }}
+              labelStyle={{ fontSize: 16, color: "white" }}
             >
               login
             </Button>

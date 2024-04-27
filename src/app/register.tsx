@@ -76,6 +76,7 @@ export default function register() {
                   onBlur={onBlur}
                   theme={{ roundness: 50 }}
                   activeOutlineColor="#1bcf9a"
+                  outlineStyle={{ backgroundColor: "white" }}
                 />
               )}
               name="name"
@@ -99,6 +100,7 @@ export default function register() {
                   onBlur={onBlur}
                   theme={{ roundness: 50 }}
                   activeOutlineColor="#1bcf9a"
+                  outlineStyle={{ backgroundColor: "white" }}
                 />
               )}
               name="email"
@@ -122,6 +124,7 @@ export default function register() {
                   onBlur={onBlur}
                   theme={{ roundness: 50 }}
                   activeOutlineColor="#1bcf9a"
+                  outlineStyle={{ backgroundColor: "white" }}
                 />
               )}
               name="phone"
@@ -145,6 +148,7 @@ export default function register() {
                   onBlur={onBlur}
                   theme={{ roundness: 50 }}
                   activeOutlineColor="#1bcf9a"
+                  outlineStyle={{ backgroundColor: "white" }}
                   secureTextEntry
                 />
               )}
@@ -169,6 +173,7 @@ export default function register() {
                   onBlur={onBlur}
                   theme={{ roundness: 50 }}
                   activeOutlineColor="#1bcf9a"
+                  outlineStyle={{ backgroundColor: "white" }}
                   secureTextEntry
                 />
               )}

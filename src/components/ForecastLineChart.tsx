@@ -81,7 +81,7 @@ export default function ForecastLineChart() {
         backgroundColor="transparent"
         // yAxisLabelSuffix="% "
         //   stepHeight={AppTheme.WP(10)}
-        startFillColor={"rgb(84,219,234)"}
+        startFillColor={"#00bfa5"}
         endFillColor={"rgb(84,219,234)"}
         rulesColor="gray"
         yAxisColor="black"
@@ -90,6 +90,7 @@ export default function ForecastLineChart() {
         yAxisTextStyle={{
           color: "black",
         }}
+        width={290}
       />
     </View>
   );

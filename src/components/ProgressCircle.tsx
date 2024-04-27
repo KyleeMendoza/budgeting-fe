@@ -24,7 +24,7 @@ export default function ProgressCircle() {
             <Text className="text-white font-semibold text-3xl">
               {((expense / income) * 100).toFixed(2)}%
             </Text>
-            <Text>
+            <Text className="text-white">
               <Text className={remaining < 0 ? "text-red-600" : ""}>
                 {remaining.toLocaleString()}
               </Text>{" "}
