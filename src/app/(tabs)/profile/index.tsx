@@ -36,7 +36,7 @@ export default function profile() {
             <Text className="font-['Poppins-Bold'] text-xl">Profile</Text>
           </View>
           <View className="details-container w-full flex flex-row justify-between items-center gap-4">
-            <View className="avatar-container size-32 rounded-full border-2 border-red-600"></View>
+            <View className="avatar-container size-32 rounded-full border-2 border-['#00bfa5']"></View>
             <View className="flex-1">
               <Text className="font-bold font-['Poppins-Bold']  text-xl">
                 Josh Mojica

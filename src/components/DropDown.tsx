@@ -2,33 +2,40 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
-const dateFilter = [
-  { label: "Daily", value: "daily" },
-  { label: "Weekly", value: "weekly" },
-  { label: "Monthly", value: "monthly" },
-];
-
-export const DropDown = () => {
-  const [value, setValue] = useState(null);
+export const DropDown = ({ filter, value, setter }) => {
+  // const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
+
+  const renderLabel = () => {
+    if (value || isFocus) {
+      return (
+        <Text style={[styles.label, isFocus && { color: "blue" }]}>
+          Dropdown label
+        </Text>
+      );
+    }
+    return null;
+  };
 
   return (
     <View className="bg-background">
       <Dropdown
+        style={[styles.dropdown, isFocus && { borderColor: "#00bfa5" }]}
         placeholderStyle={styles.placeholderStyle}
         selectedTextStyle={styles.selectedTextStyle}
         inputSearchStyle={styles.inputSearchStyle}
         iconStyle={styles.iconStyle}
-        data={dateFilter}
+        data={filter}
         maxHeight={300}
         labelField="label"
         valueField="value"
-        placeholder={!isFocus ? "Filter" : "..."}
+        placeholder={!isFocus ? "Select" : "..."}
+        searchPlaceholder="Search..."
         value={value}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         onChange={(item) => {
-          setValue(item.value);
+          setter(item.value);
           setIsFocus(false);
         }}
       />
@@ -38,7 +45,7 @@ export const DropDown = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "inherit",
+    backgroundColor: "white",
     padding: 16,
   },
   dropdown: {
@@ -50,6 +57,15 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 5,
+  },
+  label: {
+    position: "absolute",
+    backgroundColor: "white",
+    left: 22,
+    top: 8,
+    zIndex: 999,
+    paddingHorizontal: 8,
+    fontSize: 14,
   },
   placeholderStyle: {
     fontSize: 16,

@@ -1,12 +1,19 @@
 import { View, Text, ScrollView } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Piechart from "@/components/Piechart";
 import { DropDown } from "@/components/DropDown";
 import ForecastLineChart from "@/components/ForecastLineChart";
 
+const dateFilter = [
+  { label: "Daily", value: "daily" },
+  { label: "Weekly", value: "weekly" },
+  { label: "Monthly", value: "monthly" },
+];
+
 export default function analytics() {
   const { top } = useSafeAreaInsets();
+  const [value, setValue] = useState(null);
   return (
     <View
       style={{
@@ -20,7 +27,7 @@ export default function analytics() {
             <View className="w-full flex flex-row justify-between items-center">
               <Text className="font-['Poppins-Bold'] text-xl">Analytics</Text>
               <View className="w-1/3">
-                <DropDown />
+                <DropDown filter={dateFilter} setter={setValue} value={value} />
               </View>
             </View>
             <View className="piechart-container w-full h-80 rounded-2xl">

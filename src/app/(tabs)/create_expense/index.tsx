@@ -9,12 +9,24 @@ import {
   Portal,
 } from "react-native-paper";
 import { useForm, Controller } from "react-hook-form";
+import { DropDown } from "@/components/DropDown";
 
 interface FormData {
   amount: string;
   category: string;
   note: string;
 }
+
+const category = [
+  { label: "Food", value: "Food" },
+  { label: "Transportation", value: "Transportation" },
+  { label: "Utilities", value: "Utilities" },
+  { label: "Rent", value: "Rent" },
+  { label: "Entertainment", value: "Entertainment" },
+  { label: "Clothing", value: "Clothing" },
+  { label: "Savings", value: "Savings" },
+  { label: "Miscellaneous", value: "Miscellaneous" },
+];
 
 export default function create_expense() {
   const { top } = useSafeAreaInsets();
@@ -56,10 +68,13 @@ export default function create_expense() {
           </View>
           <View className="w-full flex gap-5">
             <View className="input-container">
-              <Text className="font-['Poppins-Regular'] text-lg text-gray-600">
+              <Text className="font-['Poppins-Bold'] text-lg text-gray-600">
                 Amount
               </Text>
-              <View className="border-b-2 border-black flex flex-row justify-between">
+              <View className="border-b-[1px] border-black flex flex-row justify-between items-center">
+                <Text className="font-['Poppins-Bold'] text-2xl text-gray-600">
+                  ₱
+                </Text>
                 <View className="flex-1">
                   <Controller
                     control={control}
@@ -70,8 +85,12 @@ export default function create_expense() {
                       <TextInput
                         mode="outlined"
                         value={value}
-                        onChangeText={onChange}
+                        onChangeText={(text) => {
+                          const numericValue = text.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+                          onChange(numericValue);
+                        }}
                         onBlur={onBlur}
+                        keyboardType="numeric"
                         activeOutlineColor="#1bcf9a"
                         contentStyle={{
                           backgroundColor: "#f2f1f6",
@@ -94,8 +113,8 @@ export default function create_expense() {
                 </Text>
               )}
             </View>
-            <View className="input-container">
-              <Text className="font-['Poppins-Regular'] text-lg text-gray-600">
+            <View className="input-container flex flex-col gap-4">
+              <Text className="font-['Poppins-Bold'] text-lg text-gray-600">
                 Expenses made for
               </Text>
               <Controller
@@ -104,18 +123,7 @@ export default function create_expense() {
                   required: true,
                 }}
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    mode="outlined"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    activeOutlineColor="#1bcf9a"
-                    outlineStyle={{
-                      borderWidth: 0,
-                      borderBottomWidth: 2,
-                      borderColor: "black",
-                    }}
-                  />
+                  <DropDown filter={category} value={value} setter={onChange} />
                 )}
                 name="category"
               />
@@ -126,30 +134,30 @@ export default function create_expense() {
               )}
             </View>
             <View className="input-container">
-              <Text className="font-['Poppins-Regular'] text-lg text-gray-600">
+              <Text className="font-['Poppins-Bold'] text-lg text-gray-600">
                 Note
               </Text>
-              <Controller
-                control={control}
-                rules={{
-                  required: true,
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    mode="outlined"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    activeOutlineColor="#1bcf9a"
-                    outlineStyle={{
-                      borderWidth: 0,
-                      borderBottomWidth: 2,
-                      borderColor: "black",
-                    }}
-                  />
-                )}
-                name="note"
-              />
+              <View className="border-b-[1px] border-black">
+                <Controller
+                  control={control}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      mode="outlined"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      activeOutlineColor="#1bcf9a"
+                      contentStyle={{
+                        backgroundColor: "#f2f1f6",
+                      }}
+                    />
+                  )}
+                  name="note"
+                />
+              </View>
               {errors.note && (
                 <Text className="text-sm text-red-600 italic">
                   This field is required.

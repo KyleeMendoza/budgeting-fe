@@ -41,16 +41,17 @@ export default function login() {
     },
   });
   const onSubmit = (data: FormData) => {
-    const email = data.email;
-    const password = data.password;
+    // const email = data.email;
+    // const password = data.password;
 
-    if (email === "Admin" && password === "Password123") {
-      signIn();
-      router.replace("/home");
-    } else {
-      showModal();
-      console.log("Invalid Credential.");
-    }
+    // if (email === "Admin" && password === "Password123") {
+    //   signIn();
+    //   router.replace("/home");
+    // } else {
+    //   showModal();
+    //   console.log("Invalid Credential.");
+    // }
+    router.replace("/home");
   };
 
   return (

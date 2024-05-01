@@ -97,10 +97,7 @@ export default function wallet() {
             </View>
           </View> */}
           <View className="statements-container w-full px-2 gap-3">
-            <View className="flex flex-row justify-between items-center ">
-              <Text className="font-['Poppins-Bold']">My Statements</Text>
-              <Text className="text-sm italic">View all</Text>
-            </View>
+            <Text className="font-['Poppins-Bold']">My Statements</Text>
             <View className="flex gap-3">
               {data.slice(0, 6).map((data, index) => (
                 <View
