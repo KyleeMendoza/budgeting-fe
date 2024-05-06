@@ -9,21 +9,6 @@ export default function profile() {
   const { top } = useSafeAreaInsets();
 
   return (
-    // <View
-    //   style={{
-    //     flex: 1,
-    //     justifyContent: "center",
-    //     alignItems: "center",
-    //   }}
-    // >
-    //   <Text
-    //     onPress={() => {
-    //       signOut();
-    //     }}
-    //   >
-    //     Sign Out
-    //   </Text>
-    // </View>
     <View
       style={{
         flex: 1,
@@ -38,10 +23,10 @@ export default function profile() {
           <View className="details-container w-full flex flex-row justify-between items-center gap-4">
             <View className="avatar-container size-32 rounded-full border-2 border-['#00bfa5']"></View>
             <View className="flex-1">
-              <Text className="font-bold font-['Poppins-Bold']  text-xl">
+              <Text className="font-bold font-['Poppins-Bold'] text-xl">
                 Josh Mojica
               </Text>
-              <Text>+69297321248</Text>
+              <Text className="p-1">+69297321248</Text>
             </View>
           </View>
           <View className="w-full">

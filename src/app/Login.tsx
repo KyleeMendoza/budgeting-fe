@@ -1,5 +1,6 @@
 import { View, Text, Image, useWindowDimensions } from "react-native";
 import React from "react";
+import { ToastAndroid } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import {
@@ -15,6 +16,9 @@ import spendcast from "../assets/img/spendcast.png";
 // State Context
 import { useSession } from "./ctx";
 
+//API
+import authService from "@/services/auth.service";
+
 interface FormData {
   email: string;
   password: string;
@@ -25,10 +29,10 @@ export default function login() {
   const { signIn } = useSession();
   const windowHeight = useWindowDimensions().height;
 
-  //MODAL
-  const [visible, setVisible] = React.useState(false);
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
+  //TOAST
+  const toastMessage = (message: string) => {
+    ToastAndroid.show(message, ToastAndroid.SHORT);
+  };
 
   const {
     control,
@@ -40,18 +44,24 @@ export default function login() {
       password: "",
     },
   });
-  const onSubmit = (data: FormData) => {
-    // const email = data.email;
-    // const password = data.password;
 
-    // if (email === "Admin" && password === "Password123") {
-    //   signIn();
-    //   router.replace("/home");
-    // } else {
-    //   showModal();
-    //   console.log("Invalid Credential.");
-    // }
-    router.replace("/home");
+  const onSubmit = async (data: FormData) => {
+    const email = data.email;
+    const password = data.password;
+
+    try {
+      const response = await authService.login(email, password);
+
+      if (response.status === 200) {
+        signIn();
+        toastMessage("Successfully logged in.");
+        router.replace("/home");
+      } else {
+        toastMessage("Invalid Credential.");
+      }
+    } catch (error) {
+      toastMessage("There was an error logging in.");
+    }
   };
 
   return (
@@ -60,24 +70,6 @@ export default function login() {
         className="flex-1 justify-center items-center"
         style={{ paddingTop: top, minHeight: Math.round(windowHeight) }}
       >
-        <Portal>
-          <Modal
-            visible={visible}
-            onDismiss={hideModal}
-            contentContainerStyle={{
-              backgroundColor: "white",
-              padding: 20,
-              alignSelf: "center",
-              width: "auto",
-              maxWidth: "80%",
-              borderRadius: 10,
-            }}
-          >
-            <Text className="italic">
-              Invalid credential, please try again.
-            </Text>
-          </Modal>
-        </Portal>
         <View className="absolute top-28 flex justify-center items-center">
           <Image source={spendcast} className="w-72 h-28" />
         </View>

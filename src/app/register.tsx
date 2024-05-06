@@ -1,18 +1,28 @@
 import { View, Text, Image, useWindowDimensions } from "react-native";
 import React from "react";
+import { ToastAndroid } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import { TextInput, Button } from "react-native-paper";
+import {
+  TextInput,
+  Button,
+  PaperProvider,
+  Modal,
+  Portal,
+} from "react-native-paper";
 import { useForm, Controller } from "react-hook-form";
 import spendcast from "../assets/img/spendcast.png";
 
 // State Context
 import { useSession } from "./ctx";
 
+//API
+import authService from "@/services/auth.service";
+
 interface FormData {
-  name: string;
+  username: string;
   email: string;
-  phone: string;
+  mobile: string;
   password: string;
   confirm_password: string;
 }
@@ -22,193 +32,220 @@ export default function register() {
   const { signIn } = useSession();
   const windowHeight = useWindowDimensions().height;
 
+  //TOAST
+  const toastMessage = (message: string) => {
+    ToastAndroid.show(message, ToastAndroid.SHORT);
+  };
+
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: "",
+      username: "",
       email: "",
-      phone: "",
+      mobile: "",
       password: "",
       confirm_password: "",
     },
   });
-  const onSubmit = (data: FormData) => {
-    const name = data.name;
+  const onSubmit = async (data: FormData) => {
+    const username = data.username;
     const email = data.email;
-    const phone = data.phone;
+    const mobile = data.mobile;
     const password = data.password;
     const confirm_password = data.confirm_password;
 
-    //REGISTER LOGIC HERE
-    console.log(data);
+    if (password === confirm_password) {
+      try {
+        const response = await authService.register(
+          mobile,
+          email,
+          username,
+          password
+        );
+
+        if (response.status === 201) {
+          toastMessage("Successfully created.");
+          router.replace("/login");
+        } else {
+          console.log(response.data.message);
+          toastMessage("There was an error registering.");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    } else {
+      toastMessage("passwords don't match.");
+    }
   };
 
   return (
-    <View
-      className="flex-1 justify-center items-center"
-      style={{ paddingTop: top, minHeight: Math.round(windowHeight) }}
-    >
-      <View className="w-[85%] flex flex-col justify-center items-center gap-10">
-        <View className="flex flex-col justify-center items-center">
-          <Text className="font-['Poppins-Bold'] text-3xl ">
-            Let's get started!
-          </Text>
-          <Text className="font-['Poppins-Regular'] text-sm">
-            Create an account to access all features.
-          </Text>
-        </View>
-        <View className="w-full flex flex-col gap-10">
-          <View className="flex flex-col gap-2">
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  mode="outlined"
-                  label="Name"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  theme={{ roundness: 50 }}
-                  activeOutlineColor="#1bcf9a"
-                  outlineStyle={{ backgroundColor: "white" }}
-                />
-              )}
-              name="name"
-            />
-            {errors.name && (
-              <Text className="text-sm text-red-600 italic">
-                This field is required.
-              </Text>
-            )}
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  mode="outlined"
-                  label="Email"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  theme={{ roundness: 50 }}
-                  activeOutlineColor="#1bcf9a"
-                  outlineStyle={{ backgroundColor: "white" }}
-                />
-              )}
-              name="email"
-            />
-            {errors.email && (
-              <Text className="text-sm text-red-600 italic">
-                This field is required.
-              </Text>
-            )}
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  mode="outlined"
-                  label="Phone"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  theme={{ roundness: 50 }}
-                  activeOutlineColor="#1bcf9a"
-                  outlineStyle={{ backgroundColor: "white" }}
-                />
-              )}
-              name="phone"
-            />
-            {errors.phone && (
-              <Text className="text-sm text-red-600 italic">
-                This field is required.
-              </Text>
-            )}
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  mode="outlined"
-                  label="Password"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  theme={{ roundness: 50 }}
-                  activeOutlineColor="#1bcf9a"
-                  outlineStyle={{ backgroundColor: "white" }}
-                  secureTextEntry
-                />
-              )}
-              name="password"
-            />
-            {errors.password && (
-              <Text className="text-sm text-red-600 italic">
-                This field is required.
-              </Text>
-            )}
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  mode="outlined"
-                  label="Confirm Password"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  theme={{ roundness: 50 }}
-                  activeOutlineColor="#1bcf9a"
-                  outlineStyle={{ backgroundColor: "white" }}
-                  secureTextEntry
-                />
-              )}
-              name="confirm_password"
-            />
-            {errors.confirm_password && (
-              <Text className="text-sm text-red-600 italic">
-                This field is required.
-              </Text>
-            )}
+    <PaperProvider>
+      <View
+        className="flex-1 justify-center items-center"
+        style={{ paddingTop: top, minHeight: Math.round(windowHeight) }}
+      >
+        <View className="w-[85%] flex flex-col justify-center items-center gap-10">
+          <View className="flex flex-col justify-center items-center">
+            <Text className="font-['Poppins-Bold'] text-3xl ">
+              Let's get started!
+            </Text>
+            <Text className="font-['Poppins-Regular'] text-sm">
+              Create an account to access all features.
+            </Text>
           </View>
-          <Button
-            mode="contained"
-            uppercase
-            onPress={handleSubmit(onSubmit)}
-            style={{
-              borderRadius: 20,
-              paddingVertical: 5,
-              backgroundColor: "#00bfa5",
-            }}
-            labelStyle={{ fontSize: 16 }}
-          >
-            register
-          </Button>
-        </View>
-        <Text className="font-['Poppins-Regular'] italic">
-          <Text>Already have an account? </Text>
-          <Text
-            className="underline text-blue-600"
-            onPress={() => router.replace("/login")}
-          >
-            Log in
+          <View className="w-full flex flex-col gap-10">
+            <View className="flex flex-col gap-2">
+              <Controller
+                control={control}
+                rules={{
+                  required: true,
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    mode="outlined"
+                    label="Username"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    theme={{ roundness: 50 }}
+                    activeOutlineColor="#1bcf9a"
+                    outlineStyle={{ backgroundColor: "white" }}
+                  />
+                )}
+                name="username"
+              />
+              {errors.username && (
+                <Text className="text-sm text-red-600 italic">
+                  This field is required.
+                </Text>
+              )}
+              <Controller
+                control={control}
+                rules={{
+                  required: true,
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    mode="outlined"
+                    label="Email"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    theme={{ roundness: 50 }}
+                    activeOutlineColor="#1bcf9a"
+                    outlineStyle={{ backgroundColor: "white" }}
+                  />
+                )}
+                name="email"
+              />
+              {errors.email && (
+                <Text className="text-sm text-red-600 italic">
+                  This field is required.
+                </Text>
+              )}
+              <Controller
+                control={control}
+                rules={{
+                  required: true,
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    mode="outlined"
+                    label="Phone"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    theme={{ roundness: 50 }}
+                    activeOutlineColor="#1bcf9a"
+                    outlineStyle={{ backgroundColor: "white" }}
+                  />
+                )}
+                name="mobile"
+              />
+              {errors.mobile && (
+                <Text className="text-sm text-red-600 italic">
+                  This field is required.
+                </Text>
+              )}
+              <Controller
+                control={control}
+                rules={{
+                  required: true,
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    mode="outlined"
+                    label="Password"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    theme={{ roundness: 50 }}
+                    activeOutlineColor="#1bcf9a"
+                    outlineStyle={{ backgroundColor: "white" }}
+                    secureTextEntry
+                  />
+                )}
+                name="password"
+              />
+              {errors.password && (
+                <Text className="text-sm text-red-600 italic">
+                  This field is required.
+                </Text>
+              )}
+              <Controller
+                control={control}
+                rules={{
+                  required: true,
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    mode="outlined"
+                    label="Confirm Password"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    theme={{ roundness: 50 }}
+                    activeOutlineColor="#1bcf9a"
+                    outlineStyle={{ backgroundColor: "white" }}
+                    secureTextEntry
+                  />
+                )}
+                name="confirm_password"
+              />
+              {errors.confirm_password && (
+                <Text className="text-sm text-red-600 italic">
+                  This field is required.
+                </Text>
+              )}
+            </View>
+            <Button
+              mode="contained"
+              uppercase
+              onPress={handleSubmit(onSubmit)}
+              style={{
+                borderRadius: 20,
+                paddingVertical: 5,
+                backgroundColor: "#00bfa5",
+              }}
+              labelStyle={{ fontSize: 16 }}
+            >
+              register
+            </Button>
+          </View>
+          <Text className="font-['Poppins-Regular'] italic">
+            <Text>Already have an account? </Text>
+            <Text
+              className="underline text-blue-600"
+              onPress={() => router.replace("/login")}
+            >
+              Log in
+            </Text>
           </Text>
-        </Text>
+        </View>
       </View>
-    </View>
+    </PaperProvider>
   );
 }
