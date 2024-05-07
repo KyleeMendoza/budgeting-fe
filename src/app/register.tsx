@@ -11,7 +11,6 @@ import {
   Portal,
 } from "react-native-paper";
 import { useForm, Controller } from "react-hook-form";
-import spendcast from "../assets/img/spendcast.png";
 
 // State Context
 import { useSession } from "./ctx";
@@ -20,6 +19,7 @@ import { useSession } from "./ctx";
 import authService from "@/services/auth.service";
 
 interface FormData {
+  name: string;
   username: string;
   email: string;
   mobile: string;
@@ -43,6 +43,7 @@ export default function register() {
     formState: { errors },
   } = useForm({
     defaultValues: {
+      name: "",
       username: "",
       email: "",
       mobile: "",
@@ -51,6 +52,7 @@ export default function register() {
     },
   });
   const onSubmit = async (data: FormData) => {
+    const name = data.name;
     const username = data.username;
     const email = data.email;
     const mobile = data.mobile;
@@ -60,6 +62,7 @@ export default function register() {
     if (password === confirm_password) {
       try {
         const response = await authService.register(
+          name,
           mobile,
           email,
           username,
@@ -106,7 +109,31 @@ export default function register() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     mode="outlined"
-                    label="Username"
+                    placeholder="Name"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    theme={{ roundness: 50 }}
+                    activeOutlineColor="#1bcf9a"
+                    outlineStyle={{ backgroundColor: "white" }}
+                  />
+                )}
+                name="name"
+              />
+              {errors.name && (
+                <Text className="text-sm text-red-600 italic">
+                  This field is required.
+                </Text>
+              )}
+              <Controller
+                control={control}
+                rules={{
+                  required: true,
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    mode="outlined"
+                    placeholder="Username"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -130,7 +157,7 @@ export default function register() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     mode="outlined"
-                    label="Email"
+                    placeholder="Email"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -154,7 +181,7 @@ export default function register() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     mode="outlined"
-                    label="Phone"
+                    placeholder="Phone"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -178,7 +205,7 @@ export default function register() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     mode="outlined"
-                    label="Password"
+                    placeholder="Password"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -203,7 +230,7 @@ export default function register() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     mode="outlined"
-                    label="Confirm Password"
+                    placeholder="Confirm Password"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}

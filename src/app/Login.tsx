@@ -3,6 +3,8 @@ import React from "react";
 import { ToastAndroid } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
+import { jwtDecode } from "jwt-decode";
+import "core-js/stable/atob";
 import {
   PaperProvider,
   TextInput,
@@ -12,6 +14,10 @@ import {
 } from "react-native-paper";
 import { useForm, Controller } from "react-hook-form";
 import spendcast from "../assets/img/spendcast.png";
+
+//redux
+import { useDispatch } from "react-redux";
+import { setUser } from "@/Slice/userSlice";
 
 // State Context
 import { useSession } from "./ctx";
@@ -24,10 +30,18 @@ interface FormData {
   password: string;
 }
 
+interface TokenData {
+  name: string;
+  username: string;
+  email: string;
+  mobile: string;
+}
+
 export default function login() {
   const { top } = useSafeAreaInsets();
   const { signIn } = useSession();
   const windowHeight = useWindowDimensions().height;
+  const dispatch = useDispatch();
 
   //TOAST
   const toastMessage = (message: string) => {
@@ -45,6 +59,25 @@ export default function login() {
     },
   });
 
+  const decodeToken = (token: string) => {
+    try {
+      const decodedToken: TokenData = jwtDecode(token);
+
+      const { name, username, email, mobile } = decodedToken;
+
+      dispatch(
+        setUser({
+          name,
+          username,
+          email,
+          mobile,
+        })
+      );
+    } catch (error) {
+      console.error("Error decoding token:", error);
+    }
+  };
+
   const onSubmit = async (data: FormData) => {
     const email = data.email;
     const password = data.password;
@@ -54,6 +87,7 @@ export default function login() {
 
       if (response.status === 200) {
         signIn();
+        decodeToken(response.data.token);
         toastMessage("Successfully logged in.");
         router.replace("/home");
       } else {
@@ -92,7 +126,6 @@ export default function login() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     mode="outlined"
-                    label="Email"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -100,6 +133,7 @@ export default function login() {
                     activeOutlineColor="#1bcf9a"
                     outlineStyle={{ backgroundColor: "white" }}
                     contentStyle={{ color: "black" }}
+                    placeholder="Email"
                   />
                 )}
                 name="email"
@@ -117,7 +151,7 @@ export default function login() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     mode="outlined"
-                    label="Password"
+                    placeholder="Password"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}

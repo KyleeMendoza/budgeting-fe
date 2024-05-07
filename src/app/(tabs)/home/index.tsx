@@ -1,10 +1,14 @@
 import { View, Text, FlatList, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "expo-router";
 import { useSession } from "../../ctx";
 import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from "@expo/vector-icons/Ionicons";
+
+//redux
+import { IRootState } from "store";
+import { useSelector } from "react-redux";
 
 const data = [
   {
@@ -58,6 +62,9 @@ export default function home() {
   const { top } = useSafeAreaInsets();
   const { signOut } = useSession();
 
+  const username = useSelector((state: IRootState) => state.user.username);
+  // TODO: dito na ako
+
   return (
     <View
       style={{
@@ -71,7 +78,8 @@ export default function home() {
             <View>
               <Text className="font-['Poppins-Regular'] text-lg">Welcome,</Text>
               <Text className="font-['Poppins-Bold'] text-xl">
-                Josh Mojica.
+                {/* Josh Mojica. */}
+                {username}
               </Text>
             </View>
             <Ionicons size={28} name="notifications" color="#00bfa5" />

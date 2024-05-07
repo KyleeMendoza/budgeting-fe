@@ -17,12 +17,13 @@ const login = async (email: String, password: String) => {
 };
 
 const register = async (
+  name: String,
   mobile: String,
   email: String,
   username: String,
   password: String
 ) => {
-  const body = { mobile, email, username, password };
+  const body = { name, mobile, email, username, password };
 
   try {
     const response = await axios.post(`${baseURL}/mb/signup/user`, body);
