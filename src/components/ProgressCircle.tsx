@@ -16,7 +16,7 @@ export default function ProgressCircle() {
         width={8}
         fill={fill}
         tintColor="#00bfa5"
-        onAnimationComplete={() => console.log("fill: ", fill)}
+        // onAnimationComplete={() => console.log("fill: ", fill)}
         backgroundColor="#eeee"
       >
         {(fill) => (

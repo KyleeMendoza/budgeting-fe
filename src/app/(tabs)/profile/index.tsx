@@ -4,9 +4,16 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSession } from "../../ctx";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
+//redux
+import { IRootState } from "store";
+import { useSelector } from "react-redux";
+
 export default function profile() {
   const { signOut } = useSession();
   const { top } = useSafeAreaInsets();
+
+  const name = useSelector((state: IRootState) => state.user.name);
+  const mobile = useSelector((state: IRootState) => state.user.mobile);
 
   return (
     <View
@@ -24,9 +31,9 @@ export default function profile() {
             <View className="avatar-container size-32 rounded-full border-2 border-['#00bfa5']"></View>
             <View className="flex-1">
               <Text className="font-bold font-['Poppins-Bold'] text-xl">
-                Josh Mojica
+                {name}
               </Text>
-              <Text className="p-1">+69297321248</Text>
+              <Text className="p-1">{mobile}</Text>
             </View>
           </View>
           <View className="w-full">

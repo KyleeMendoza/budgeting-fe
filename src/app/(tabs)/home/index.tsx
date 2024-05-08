@@ -1,69 +1,106 @@
 import { View, Text, FlatList, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "expo-router";
 import { useSession } from "../../ctx";
 import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
+//API
+import userService from "@/services/user.service";
+
 //redux
 import { IRootState } from "store";
 import { useSelector } from "react-redux";
 
-const data = [
+const icons = [
   {
-    item: "Food",
-    expense: "P1,000",
+    category: "Food",
     icon: <Ionicons size={28} name="fast-food" color="#00bfa5" />,
   },
   {
-    item: "Transportation",
-    expense: "P500",
+    category: "Transportation",
     icon: <Ionicons size={28} name="car" color="#00bfa5" />,
   },
   {
-    item: "Utilities",
-    expense: "P700",
+    category: "Utilities",
     icon: <Ionicons size={28} name="bulb" color="#00bfa5" />,
   },
   {
-    item: "Rent",
-    expense: "P2,000",
+    category: "Rent",
     icon: <Ionicons size={28} name="home" color="#00bfa5" />,
   },
   {
-    item: "Entertainment",
-    expense: "P300",
+    category: "Entertainment",
     icon: <Ionicons size={28} name="game-controller" color="#00bfa5" />,
   },
   {
-    item: "Clothing",
-    expense: "P600",
+    category: "Clothing",
     icon: <Ionicons size={28} name="shirt" color="#00bfa5" />,
   },
   {
-    item: "Healthcare",
-    expense: "P4,00",
+    category: "Savings",
     icon: <Ionicons size={28} name="accessibility" color="#00bfa5" />,
   },
   {
-    item: "Education",
-    expense: "P800",
+    category: "Others",
     icon: <Ionicons size={28} name="book" color="#00bfa5" />,
-  },
-  {
-    item: "Gadget",
-    expense: "P1,200",
-    icon: <Ionicons size={28} name="phone-portrait" color="#00bfa5" />,
   },
 ];
 
 export default function home() {
   const { top } = useSafeAreaInsets();
   const { signOut } = useSession();
+  const [expenseData, setExpenseData] = useState([]);
 
-  const username = useSelector((state: IRootState) => state.user.username);
+  const name = useSelector((state: IRootState) => state.user.name);
   // TODO: dito na ako
+
+  useEffect(() => {
+    const expensesData = async () => {
+      try {
+        const response = await userService.getExpenses();
+        const latestEntries = response.data[response.data.length - 1];
+        // const addIconToData = latestEntries.map((item) => {
+        //   let icon: any;
+        //   switch (item.category) {
+        //     case "Food":
+        //       icon = <Ionicons size={28} name="fast-food" color="#00bfa5" />;
+        //       break;
+        //     case "Transportation":
+        //       icon = <Ionicons size={28} name="car" color="#00bfa5" />;
+        //       break;
+        //     case "Utilities":
+        //       icon = <Ionicons size={28} name="car" color="#00bfa5" />;
+        //       break;
+        //     case "Rent":
+        //       icon = <Ionicons size={28} name="car" color="#00bfa5" />;
+        //       break;
+        //     case "Entertainment":
+        //       icon = <Ionicons size={28} name="car" color="#00bfa5" />;
+        //       break;
+        //     case "Clothing":
+        //       icon = <Ionicons size={28} name="car" color="#00bfa5" />;
+        //       break;
+        //     case "Savings":
+        //       icon = <Ionicons size={28} name="car" color="#00bfa5" />;
+        //       break;
+        //     case "Others":
+        //       icon = <Ionicons size={28} name="car" color="#00bfa5" />;
+        //       break;
+        //     default:
+        //       icon = null; // Handle default case if needed
+        //   }
+        //   return { ...item, icon };
+        // });
+        // console.log("expensesData: ", latestEntries);
+        setExpenseData(latestEntries);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    expensesData();
+  }, []);
 
   return (
     <View
@@ -79,7 +116,7 @@ export default function home() {
               <Text className="font-['Poppins-Regular'] text-lg">Welcome,</Text>
               <Text className="font-['Poppins-Bold'] text-xl">
                 {/* Josh Mojica. */}
-                {username}
+                {name}
               </Text>
             </View>
             <Ionicons size={28} name="notifications" color="#00bfa5" />
@@ -126,24 +163,33 @@ export default function home() {
               <Text className="text-sm italic">View all</Text>
             </View>
             <View className="flex gap-3">
-              {data.slice(0, 6).map((data, index) => (
-                <View
-                  className="w-full flex flex-row items-center justify-between rounded-lg p-4 bg-white"
-                  key={index}
-                >
-                  <View className="flex flex-row justify-center items-center gap-5">
-                    <View className="size-12 rounded-xl flex justify-center items-center">
-                      {data.icon}
+              {expenseData &&
+                expenseData.slice(0, 6).map((data, index) => (
+                  <View
+                    className="w-full flex flex-row items-center justify-between rounded-lg p-4 bg-white"
+                    key={index}
+                  >
+                    <View className="flex flex-row justify-center items-center gap-5">
+                      {icons.map((item, index) =>
+                        item.category === data.category ? (
+                          <View
+                            className="size-12 rounded-xl flex justify-center items-center"
+                            key={index}
+                          >
+                            {item.icon}
+                          </View>
+                        ) : null
+                      )}
+
+                      <Text className="font-['Poppins-Bold'] text-lg">
+                        {data.category}
+                      </Text>
                     </View>
-                    <Text className="font-['Poppins-Bold'] text-lg">
-                      {data.item}
+                    <Text className="font-['Poppins-Regular']">
+                      P{data.allocated_amount}
                     </Text>
                   </View>
-                  <Text className="font-['Poppins-Regular']">
-                    {data.expense}
-                  </Text>
-                </View>
-              ))}
+                ))}
             </View>
           </View>
         </View>
