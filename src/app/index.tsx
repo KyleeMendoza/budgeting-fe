@@ -64,7 +64,7 @@ export default function Page() {
 
   return (
     <PaperProvider theme={{ ...theme, fonts }}>
-      <Redirect href={"/home"} />
+      <Redirect href={"/login"} />
     </PaperProvider>
   );
 }

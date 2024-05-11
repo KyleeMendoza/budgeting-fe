@@ -1,4 +1,5 @@
 import React from "react";
+import { View } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -8,6 +9,18 @@ import { Text } from "react-native";
 
 //State Context
 import { useSession } from "../ctx";
+
+// API
+import userService from "@/services/user.service";
+
+//redux
+import { IRootState } from "store";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setOpenIncomeModal,
+  setOpenStatementModal,
+  setOpenCreateModal,
+} from "@/Slice/modalSlice";
 
 export default function TabLayout() {
   {
@@ -25,6 +38,25 @@ export default function TabLayout() {
   {
     /* TODO: Comment this out to remove auth */
   }
+
+  const dispatch = useDispatch();
+  const checkTimeFrame = async () => {
+    try {
+      const response = await userService.checkTimeFrame();
+      if (response.data.isDone) {
+        // Income and Statements are set!
+        dispatch(setOpenCreateModal());
+      } else if (response.data.isDone === false) {
+        // Prompt user to enter expenses after initializing their income.
+        dispatch(setOpenStatementModal());
+      } else {
+        // Prompt user to enter their income first.
+        dispatch(setOpenIncomeModal());
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <Tabs
@@ -69,13 +101,25 @@ export default function TabLayout() {
 
       <Tabs.Screen
         name="create_expense"
+        // options={{
+        //   title: "Create",
+        //   tabBarIcon: ({ color }) => (
+        //     <AntDesign size={28} name="pluscircleo" color={color} />
+        //   ),
+        //   headerShown: false,
+        //   tabBarLabel: "",
+        // }}
         options={{
-          title: "Create",
-          tabBarIcon: ({ color }) => (
-            <AntDesign size={28} name="pluscircleo" color={color} />
+          tabBarButton: () => (
+            <View className="py-2 px-4">
+              <AntDesign
+                size={30}
+                name="pluscircleo"
+                color="gray"
+                onPress={checkTimeFrame}
+              />
+            </View>
           ),
-          headerShown: false,
-          tabBarLabel: "",
         }}
       />
 

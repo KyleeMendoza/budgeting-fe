@@ -14,7 +14,7 @@ import { DropDown } from "@/components/DropDown";
 interface FormData {
   amount: string;
   category: string;
-  note: string;
+  // note: string;
 }
 
 const category = [
@@ -39,17 +39,17 @@ export default function create_expense() {
     defaultValues: {
       amount: "",
       category: "",
-      note: "",
+      // note: "",
     },
   });
   const onSubmit = (data: FormData) => {
     const amount = data.amount;
     const category = data.category;
-    const note = data.note;
+    // const note = data.note;
 
     console.log("amount: ", amount);
     console.log("category: ", category);
-    console.log("note: ", note);
+    // console.log("note: ", note);
   };
 
   return (
@@ -133,7 +133,7 @@ export default function create_expense() {
                 </Text>
               )}
             </View>
-            <View className="input-container">
+            {/* <View className="input-container">
               <Text className="font-['Poppins-Bold'] text-lg text-gray-600">
                 Note
               </Text>
@@ -163,7 +163,7 @@ export default function create_expense() {
                   This field is required.
                 </Text>
               )}
-            </View>
+            </View> */}
           </View>
           <View className="w-full">
             <Button
