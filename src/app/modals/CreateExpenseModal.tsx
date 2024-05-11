@@ -78,7 +78,7 @@ export default function CreateExpensesModal() {
       }}
     >
       <View style={styles.centeredView}>
-        <View style={styles.modalView}>
+        <View style={styles.modalView} className="flex flex-col gap-4">
           <Text className="font-['Poppins-Bold'] text-lg">
             Create Budget Statement.
           </Text>
