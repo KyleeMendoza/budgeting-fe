@@ -7,8 +7,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 //Modals
-import IncomeModal from "@/app/modals/IncomeModal";
-import ExpensesModal from "@/app/modals/ExpensesModal";
+import IncomeModal from "@/modals/IncomeModal";
+import ExpensesModal from "@/modals/ExpensesModal";
+import CreateExpensesModal from "@/modals/CreateExpenseModal";
 
 //API
 import userService from "@/services/user.service";
@@ -18,7 +19,6 @@ import { IRootState } from "store";
 import { useSelector, useDispatch } from "react-redux";
 import { setCredits } from "@/Slice/userSlice";
 import { setOpenIncomeModal, setOpenStatementModal } from "@/Slice/modalSlice";
-import CreateExpensesModal from "@/app/modals/CreateExpenseModal";
 
 const icons = [
   {
