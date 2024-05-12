@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "http://52.62.236.103:3001";
+const baseURL = "http://3.107.20.181";
 
 const checkTimeFrame = async () => {
   try {

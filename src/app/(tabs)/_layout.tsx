@@ -100,7 +100,7 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="create_expense"
+        name="create_expenses"
         options={{
           tabBarButton: () => (
             <View className="py-2 px-4">

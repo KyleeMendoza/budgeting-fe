@@ -170,9 +170,9 @@ export default function login() {
                 </Text>
               )}
 
-              <Text className="italic self-end font-['Poppins-Regular'] underline text-blue-600">
+              {/* <Text className="italic self-end font-['Poppins-Regular'] underline text-blue-600">
                 Forgot password ?
-              </Text>
+              </Text> */}
             </View>
             <Button
               mode="contained"
