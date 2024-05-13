@@ -6,10 +6,10 @@ const initialState = {
   email: "",
   mobile: "",
   timeframe: "",
-  income: 0,
   expenses: 0,
   balance: 0,
   expenseData: [],
+  isDone: false,
 };
 
 const UserSlice = createSlice({
@@ -27,9 +27,8 @@ const UserSlice = createSlice({
       const { timeframe } = action.payload;
       state.timeframe = timeframe;
     },
-    setIncome: (state, action) => {
-      const { income } = action.payload;
-      state.income = income;
+    setIsDone: (state) => {
+      state.isDone = true;
     },
     setExpenseData: (state, action) => {
       const { expenseData } = action.payload;
@@ -44,7 +43,7 @@ const UserSlice = createSlice({
   },
 });
 
-export const { setUser, setIncome, setExpenseData, setCredits, setTimeframe } =
+export const { setUser, setIsDone, setExpenseData, setCredits, setTimeframe } =
   UserSlice.actions;
 
 export default UserSlice.reducer;

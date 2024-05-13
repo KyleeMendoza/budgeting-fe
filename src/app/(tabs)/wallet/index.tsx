@@ -101,7 +101,6 @@ export default function wallet() {
   const [expenseDataDisplay, setExpenseDataDisplay] = useState([]);
 
   const balance = useSelector((state: IRootState) => state.user.balance);
-  const income = useSelector((state: IRootState) => state.user.income);
   const expenses = useSelector((state: IRootState) => state.user.expenses);
 
   useEffect(() => {
@@ -135,40 +134,14 @@ export default function wallet() {
               <Text className="font-['Poppins-Bold'] text-xl">
                 Budget Summary
               </Text>
-              <View className="w-1/3">{/* <DropDown /> */}</View>
             </View>
             <View className="w-full h-72 rounded-2xl">
-              {/* <Piechart /> */}
               <ProgressCircle />
             </View>
           </View>
-          {/* <View className="w-full flex flex-row gap-4">
-            <View className="flex-1 rounded-lg flex justify-center items-center bg-['#00bfa5'] py-4">
-              <Text className="font-['Poppins-Regular'] text-white">
-                Total Income:
-              </Text>
-              <Text className="font-['Poppins-Bold'] text-2xl text-white">
-                P40,000
-              </Text>
-            </View>
-            <View className="flex-1 rounded-lg flex justify-center items-center bg-['#FAA0A0'] py-4">
-              <Text className="font-['Poppins-Regular'] text-white">
-                Total Expense:
-              </Text>
-              <Text className="font-['Poppins-Bold'] text-2xl text-white">
-                P25,000
-              </Text>
-            </View>
-          </View> */}
           <View className="statements-container w-full px-2 gap-3">
             <View className="flex flex-row justify-between">
               <Text className="font-['Poppins-Bold']">Recent Statements</Text>
-              {/* <Text
-                className="text-sm italic"
-                onPress={() => router.replace("/wallet")}
-              >
-                View all
-              </Text> */}
             </View>
             <View className="flex gap-3">
               {expenseDataDisplay.length > 0 ? (
@@ -189,9 +162,14 @@ export default function wallet() {
                         ) : null
                       )}
 
-                      <Text className="font-['Poppins-Bold'] text-lg">
-                        {data.category}
-                      </Text>
+                      <View className="flex flex-col">
+                        <Text className="font-['Poppins-Bold'] text-lg">
+                          {data.category}
+                        </Text>
+                        <Text className="font-['Poppins-Regular'] text-xs">
+                          {data.date}
+                        </Text>
+                      </View>
                     </View>
                     <Text className="font-['Poppins-Regular']">
                       P{data.allocated_amount}

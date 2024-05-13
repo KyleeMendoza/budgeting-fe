@@ -9,9 +9,11 @@ import {
   StyleSheet,
   ToastAndroid,
 } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { TextInput, Button } from "react-native-paper";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { DropDown } from "@/components/DropDown";
+import dayjs from "dayjs";
 
 //redux
 import { IRootState } from "store";
@@ -24,35 +26,21 @@ import getterService from "@/services/getter.service";
 import userService from "@/services/user.service";
 import { dispatchCommand } from "react-native-reanimated";
 
-interface FormData {
-  category1: string;
-  percent1: string;
-  category2: string;
-  percent2: string;
-  category3: string;
-  percent3: string;
-  category4: string;
-  percent4: string;
-  // note: string;
-}
-
 export default function ExpensesModal() {
   const dispatch = useDispatch();
+  const [income, setIncome] = useState("");
   const statementModal = useSelector(
     (state: IRootState) => state.modal.statementModal
   );
-  const income = useSelector((state: IRootState) => state.user.income);
   const [categories, setCategories] = useState([]);
-  const [timeframe, setTimeframe] = useState("");
-  const [timeframeNumber, setTimeframeNumber] = useState();
 
   //TOAST
   const toastMessage = (message: string) => {
     ToastAndroid.show(message, ToastAndroid.SHORT);
   };
 
+  //Fetch categories for the Dropdown component.
   useEffect(() => {
-    //Fetch categories for the Dropdown component.
     const fetchCategories = async () => {
       try {
         const response = await getterService.getCategories();
@@ -66,82 +54,63 @@ export default function ExpensesModal() {
       }
     };
 
-    //Fetch timeframe need for posting the expenses.
-    const fetchTimeframe = async () => {
-      try {
-        const response = await userService.getTimeframe();
-        setTimeframe(response.data.Timeframe);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    const fetchUserExpenses = async () => {
-      try {
-        const response = await userService.getExpenses();
-        setTimeframeNumber(response.data.length + 1);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     fetchCategories();
-    if (income !== 0) {
-      fetchTimeframe();
-      fetchUserExpenses();
-    }
   }, []);
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const { register, control, handleSubmit, reset, watch } = useForm({
     defaultValues: {
-      category1: "",
-      percent1: "",
-      category2: "",
-      percent2: "",
-      category3: "",
-      percent3: "",
-      category4: "",
-      percent4: "",
+      test: [{ category: "", percentage: "" }],
     },
   });
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "test",
+  });
 
-  const onSubmit = async (data: FormData) => {
-    const transformedData = [];
+  const onSubmit = async (data: { test: any[] }) => {
+    const expenseData = data.test;
+    const dataToday = dayjs().format("YYYY-MM-DD");
 
-    for (let i = 1; i <= 4; i++) {
-      const categoryKey = `category${i}`;
-      const percentKey = `percent${i}`;
-      const category = data[categoryKey];
-      const percentage = parseInt(data[percentKey]);
+    // Convert percentage values to numbers
+    const modifiedData = expenseData.map((item) => ({
+      category: item.category,
+      percentage: parseInt(item.percentage),
+    }));
 
-      if (category && !isNaN(percentage)) {
-        transformedData.push({ category, percentage });
+    if (income !== "" && expenseData.length !== 0) {
+      if (expenseData.length < 4) {
+        toastMessage("Please add atleast four expense statements.");
+      } else {
+        //POST INCOME
+        try {
+          const incomeResponse = await userService.postIncome(income);
+          if (incomeResponse.status === 200) {
+            //POST EXPENSES
+            try {
+              const expenseDataResponse = await userService.postInitialExpences(
+                modifiedData,
+                dataToday
+              );
+              if (expenseDataResponse.status === 200) {
+                dispatch(setExpenseData(modifiedData));
+                dispatch(setCloseStatementModal());
+                toastMessage("Expense statements successfully added.");
+              }
+            } catch (error) {
+              toastMessage("There was an error setting expense data.");
+            }
+          }
+        } catch (error) {
+          toastMessage("There was an error setting income.");
+        }
+
+        // console.log("income: ", income);
+        // console.log("dateToday: ", dataToday);
+        // console.log("modifiedData: ", modifiedData);
       }
+    } else {
+      toastMessage("Please complete all inputs in the form.");
     }
-
-    // try {
-    //   const response = await userService.postInitialExpences(
-    //     transformedData,
-    //     `${timeframe} ${timeframeNumber}`
-    //   );
-    //   if (response.status === 200) {
-    //     toastMessage("Statements successfully added.");
-    //     dispatch(setExpenseData(transformedData));
-    //     dispatch(setCloseStatementModal());
-    //     console.log("Timeframe is set.");
-    //   } else {
-    //     toastMessage("There was an error setting expenses.");
-    //   }
-    // } catch (error) {
-    //   toastMessage("There was an error setting expenses.");
-    // }
-
-    console.log("income: ", income);
-    console.log("expenseData: ", transformedData);
   };
 
   return (
@@ -162,221 +131,107 @@ export default function ExpensesModal() {
             style={styles.modalText}
             className="font-['Poppins-Regular'] text-sm"
           >
-            Add 4 initial budget statements.
+            Add atleast 4 budget statements.
           </Text>
+          <Ionicons
+            size={28}
+            name="close"
+            color="#00bfa5"
+            onPress={() => {
+              dispatch(setCloseStatementModal());
+            }}
+            style={{ position: "absolute", top: 10, right: 10 }}
+          />
+          <View className="income-container mb-4">
+            <Text className="font-['Poppins-Regular'] text-sm mb-1">
+              Enter your income:
+            </Text>
+            <TextInput
+              mode="outlined"
+              value={income}
+              onChangeText={(value) => setIncome(value)}
+              theme={{ roundness: 10 }}
+              activeOutlineColor="#1bcf9a"
+              outlineStyle={{ backgroundColor: "white" }}
+              contentStyle={{ color: "black" }}
+              placeholder="₱"
+              keyboardType="numeric"
+            />
+          </View>
           <View className="w-full flex flex-col gap-4">
-            <ScrollView style={{ height: 300 }}>
-              <View className="w-full flex gap-5">
-                <View className="entry-container flex gap-2">
-                  <Text className="font-[Poppins-Bold] text-sm">Entry 1</Text>
-                  <View className="category-container w-full">
-                    <Controller
-                      control={control}
-                      rules={{
-                        required: true,
-                      }}
-                      render={({ field: { onChange, onBlur, value } }) => (
-                        <DropDown
-                          filter={categories}
-                          value={value}
-                          setter={onChange}
-                        />
-                      )}
-                      name="category1"
-                    />
-                    {errors.category1 && (
-                      <Text className="text-sm text-red-600 italic">
-                        This field is required.
-                      </Text>
-                    )}
-                  </View>
-                  <View className="amount-container w-full">
-                    <Controller
-                      control={control}
-                      rules={{
-                        required: true,
-                      }}
-                      render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
-                          mode="outlined"
-                          value={value}
-                          onChangeText={onChange}
-                          onBlur={onBlur}
-                          activeOutlineColor="#1bcf9a"
-                          outlineStyle={{ backgroundColor: "white" }}
-                          contentStyle={{ color: "black" }}
-                          placeholder="Percent"
-                          keyboardType="numeric"
-                          right={<TextInput.Affix text="%" />}
-                        />
-                      )}
-                      name="percent1"
-                    />
-                    {errors.percent1 && (
-                      <Text className="text-sm text-red-600 italic">
-                        This field is required.
-                      </Text>
-                    )}
-                  </View>
-                </View>
-                {/* <View className="entry-container flex gap-2">
-                  <Text className="font-[Poppins-Bold] text-sm">Entry 2</Text>
-                  <View className="category-container w-full">
-                    <Controller
-                      control={control}
-                      rules={{
-                        required: true,
-                      }}
-                      render={({ field: { onChange, onBlur, value } }) => (
-                        <DropDown
-                          filter={categories}
-                          value={value}
-                          setter={onChange}
-                        />
-                      )}
-                      name="category2"
-                    />
-                    {errors.category2 && (
-                      <Text className="text-sm text-red-600 italic">
-                        This field is required.
-                      </Text>
-                    )}
-                  </View>
-                  <View className="amount-container w-full">
-                    <Controller
-                      control={control}
-                      rules={{
-                        required: true,
-                      }}
-                      render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
-                          mode="outlined"
-                          value={value}
-                          onChangeText={onChange}
-                          onBlur={onBlur}
-                          activeOutlineColor="#1bcf9a"
-                          outlineStyle={{ backgroundColor: "white" }}
-                          contentStyle={{ color: "black" }}
-                          placeholder="Percent"
-                          keyboardType="numeric"
-                          right={<TextInput.Affix text="%" />}
-                        />
-                      )}
-                      name="percent2"
-                    />
-                    {errors.percent2 && (
-                      <Text className="text-sm text-red-600 italic">
-                        This field is required.
-                      </Text>
-                    )}
-                  </View>
-                </View>
-                <View className="entry-container flex gap-2">
-                  <Text className="font-[Poppins-Bold] text-sm">Entry 3</Text>
-                  <View className="category-container w-full">
-                    <Controller
-                      control={control}
-                      rules={{
-                        required: true,
-                      }}
-                      render={({ field: { onChange, onBlur, value } }) => (
-                        <DropDown
-                          filter={categories}
-                          value={value}
-                          setter={onChange}
-                        />
-                      )}
-                      name="category3"
-                    />
-                    {errors.category3 && (
-                      <Text className="text-sm text-red-600 italic">
-                        This field is required.
-                      </Text>
-                    )}
-                  </View>
-                  <View className="amount-container w-full">
-                    <Controller
-                      control={control}
-                      rules={{
-                        required: true,
-                      }}
-                      render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
-                          mode="outlined"
-                          value={value}
-                          onChangeText={onChange}
-                          onBlur={onBlur}
-                          activeOutlineColor="#1bcf9a"
-                          outlineStyle={{ backgroundColor: "white" }}
-                          contentStyle={{ color: "black" }}
-                          placeholder="Percent"
-                          keyboardType="numeric"
-                          right={<TextInput.Affix text="%" />}
-                        />
-                      )}
-                      name="percent3"
-                    />
-                    {errors.percent3 && (
-                      <Text className="text-sm text-red-600 italic">
-                        This field is required.
-                      </Text>
-                    )}
-                  </View>
-                </View>
-                <View className="entry-container flex gap-2">
-                  <Text className="font-[Poppins-Bold] text-sm">Entry 4</Text>
-                  <View className="category-container w-full">
-                    <Controller
-                      control={control}
-                      rules={{
-                        required: true,
-                      }}
-                      render={({ field: { onChange, onBlur, value } }) => (
-                        <DropDown
-                          filter={categories}
-                          value={value}
-                          setter={onChange}
-                        />
-                      )}
-                      name="category4"
-                    />
-                    {errors.category4 && (
-                      <Text className="text-sm text-red-600 italic">
-                        This field is required.
-                      </Text>
-                    )}
-                  </View>
-                  <View className="amount-container w-full">
-                    <Controller
-                      control={control}
-                      rules={{
-                        required: true,
-                      }}
-                      render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
-                          mode="outlined"
-                          value={value}
-                          onChangeText={onChange}
-                          onBlur={onBlur}
-                          activeOutlineColor="#1bcf9a"
-                          outlineStyle={{ backgroundColor: "white" }}
-                          contentStyle={{ color: "black" }}
-                          placeholder="Percent"
-                          keyboardType="numeric"
-                          right={<TextInput.Affix text="%" />}
-                        />
-                      )}
-                      name="percent4"
-                    />
-                    {errors.percent4 && (
-                      <Text className="text-sm text-red-600 italic">
-                        This field is required.
-                      </Text>
-                    )}
-                  </View>
-                </View> */}
+            <View className="flex flex-col justify-center gap-2">
+              <View className="flex flex-row justify-between items-center">
+                <Text className="font-['Poppins-Regular'] text-sm mb-1">
+                  Enter your expenses:
+                </Text>
+                <Ionicons
+                  size={28}
+                  name="add"
+                  color="#00bfa5"
+                  onPress={() => {
+                    append({ category: "", percentage: "" });
+                  }}
+                />
               </View>
-            </ScrollView>
+              <ScrollView style={{ maxHeight: 300 }}>
+                {fields.map((item, index) => {
+                  return (
+                    <View
+                      key={item.id}
+                      className="flex flex-row justify-between items-center mb-2"
+                    >
+                      <View className="flex flex-row gap-2 flex-1 items-center">
+                        <View className="flex-1">
+                          <Controller
+                            control={control}
+                            rules={{
+                              required: true,
+                            }}
+                            render={({
+                              field: { onChange, onBlur, value },
+                            }) => (
+                              <DropDown
+                                filter={categories}
+                                value={value}
+                                setter={onChange}
+                              />
+                            )}
+                            name={`test.${index}.category`}
+                          />
+                        </View>
+                        <Controller
+                          render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                              mode="outlined"
+                              value={value}
+                              onChangeText={onChange}
+                              onBlur={onBlur}
+                              activeOutlineColor="#1bcf9a"
+                              outlineStyle={{ backgroundColor: "white" }}
+                              contentStyle={{ color: "black" }}
+                              placeholder="%"
+                              keyboardType="numeric"
+                              style={{ width: "20%" }}
+                            />
+                          )}
+                          name={`test.${index}.percentage`}
+                          control={control}
+                          rules={{
+                            required: true,
+                          }}
+                        />
+                      </View>
+                      <Ionicons
+                        size={28}
+                        name="close"
+                        color="red"
+                        onPress={() => remove(index)}
+                      />
+                    </View>
+                  );
+                })}
+              </ScrollView>
+            </View>
             <View className="w-full">
               <Button
                 mode="contained"
@@ -412,7 +267,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     padding: 25,
-    // alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,

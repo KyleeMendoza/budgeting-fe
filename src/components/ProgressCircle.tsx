@@ -1,13 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text } from "react-native";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 
-export default function ProgressCircle() {
-  const income = 40000;
-  const expense = 25000;
-  const remaining = income - expense;
+//redux
+import { IRootState } from "store";
+import { useSelector, useDispatch } from "react-redux";
 
-  const fill = Math.round((expense / income) * 100);
+export default function ProgressCircle() {
+  const savings = useSelector((state: IRootState) => state.user.balance);
+  const expenses = useSelector((state: IRootState) => state.user.expenses);
+
+  const income = savings + expenses;
+  const remaining = income - expenses;
+
+  const fill = Math.round((expenses / income) * 100);
 
   return (
     <View className="size-full flex justify-center items-center">
@@ -16,13 +22,12 @@ export default function ProgressCircle() {
         width={8}
         fill={fill}
         tintColor="#00bfa5"
-        // onAnimationComplete={() => console.log("fill: ", fill)}
         backgroundColor="#eeee"
       >
         {(fill) => (
           <View className="bg-[#00bfa5] size-[90%] rounded-full flex justify-center items-center gap-2">
             <Text className="text-white font-semibold text-3xl">
-              {((expense / income) * 100).toFixed(2)}%
+              {((expenses / income) * 100).toFixed(2)}%
             </Text>
             <Text className="text-white">
               <Text className={remaining < 0 ? "text-red-600" : ""}>

@@ -7,7 +7,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 //Modals
-import IncomeModal from "@/modals/IncomeModal";
 import ExpensesModal from "@/modals/ExpensesModal";
 import CreateExpensesModal from "@/modals/CreateExpenseModal";
 
@@ -17,10 +16,9 @@ import userService from "@/services/user.service";
 //redux
 import { IRootState } from "store";
 import { useSelector, useDispatch } from "react-redux";
-import { setCredits } from "@/Slice/userSlice";
+import { setCredits, setIsDone } from "@/Slice/userSlice";
 import {
   setOpenTimeframeModal,
-  setOpenIncomeModal,
   setOpenStatementModal,
 } from "@/Slice/modalSlice";
 import TimeframeModal from "@/modals/TimeframeModal";
@@ -68,14 +66,13 @@ export default function home() {
 
   const name = useSelector((state: IRootState) => state.user.name);
   const balance = useSelector((state: IRootState) => state.user.balance);
-  const income = useSelector((state: IRootState) => state.user.income);
   const timeframe = useSelector((state: IRootState) => state.user.timeframe);
   const expenses = useSelector((state: IRootState) => state.user.expenses);
   const expenseData = useSelector(
     (state: IRootState) => state.user.expenseData
   );
 
-  //This is the initializer function.
+  //Initializer function. Running this on mount will fetch savings and expenses.
   const getUserSavingsAndExpense = async () => {
     try {
       const response = await userService.getUserSavingsAndExpense();
@@ -103,7 +100,7 @@ export default function home() {
     getUserSavingsAndExpense();
   }, []);
 
-  //After initializer function updates the expense and balance, get the expensesData to display it.
+  // After fetching the savings and expenses, fetch the expenses data array.
   useEffect(() => {
     const expensesData = async () => {
       try {
@@ -121,26 +118,27 @@ export default function home() {
     }
   }, [expenses]);
 
-  const checkTimeFrame = async () => {
-    try {
-      const response = await userService.checkTimeFrame();
-      if (response.data.isDone) {
-        console.log("Income and Statements are set!");
-        // Run the initializer function again.
-        getUserSavingsAndExpense();
-      } else if (response.data.isDone === false) {
-        // Prompt user to enter income and expense
-        dispatch(setOpenIncomeModal());
-      } else {
-        // Prompt user to enter timeframe first.
-        dispatch(setOpenTimeframeModal());
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   useEffect(() => {
+    const checkTimeFrame = async () => {
+      try {
+        const response = await userService.checkTimeFrame();
+        if (response.data.isDone) {
+          console.log("Income and Statements are set!");
+          // Run the initializer function again.
+          getUserSavingsAndExpense();
+          dispatch(setIsDone()); //user is done making expense statements for the day.
+        } else if (response.data.isDone === false) {
+          // Prompt user to enter income and expense
+          dispatch(setOpenStatementModal());
+        } else {
+          // Prompt user to enter timeframe first.
+          dispatch(setOpenTimeframeModal());
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     checkTimeFrame();
   }, [timeframe, expenseData]);
 
@@ -153,7 +151,6 @@ export default function home() {
     >
       <ScrollView>
         <TimeframeModal />
-        <IncomeModal />
         <ExpensesModal />
         <CreateExpensesModal />
         <View className="main-container size-full flex items-center p-5 gap-8 bg-background">
@@ -174,7 +171,7 @@ export default function home() {
             <View className="w-full">
               <View>
                 <Text className="font-['Poppins-Regular'] text-white">
-                  Total Balance:
+                  Total Savings:
                 </Text>
                 <Text className="font-['Poppins-Bold'] text-3xl text-white">
                   {balance ? `₱ ${balance.toLocaleString()}` : "0"}
@@ -231,9 +228,14 @@ export default function home() {
                         ) : null
                       )}
 
-                      <Text className="font-['Poppins-Bold'] text-lg">
-                        {data.category}
-                      </Text>
+                      <View className="flex flex-col">
+                        <Text className="font-['Poppins-Bold'] text-lg">
+                          {data.category}
+                        </Text>
+                        <Text className="font-['Poppins-Regular'] text-xs">
+                          {data.date}
+                        </Text>
+                      </View>
                     </View>
                     <Text className="font-['Poppins-Regular']">
                       P{data.allocated_amount}

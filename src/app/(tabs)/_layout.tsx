@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Tabs, Redirect } from "expo-router";
-import { Text } from "react-native";
+import { Text, ToastAndroid } from "react-native";
 
 //State Context
 import { useSession } from "../ctx";
@@ -17,7 +17,6 @@ import userService from "@/services/user.service";
 import { IRootState } from "store";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  setOpenIncomeModal,
   setOpenTimeframeModal,
   setOpenCreateModal,
   setOpenStatementModal,
@@ -40,22 +39,39 @@ export default function TabLayout() {
     /* TODO: Comment this out to remove auth */
   }
 
+  const isDone = useSelector((state: IRootState) => state.user.isDone);
+
+  //TOAST
+  const toastMessage = (message: string) => {
+    ToastAndroid.show(message, ToastAndroid.SHORT);
+  };
+
+  // useEffect(() => {
+  //   console.log("isDone: ", isDone);
+  // }, [isDone]);
+
   const dispatch = useDispatch();
   const checkTimeFrame = async () => {
-    try {
-      const response = await userService.checkTimeFrame();
-      if (response.data.isDone) {
-        // Income and Statements are set!
-        dispatch(setOpenCreateModal());
-      } else if (response.data.isDone === false) {
-        // Prompt user to enter income and expense
-        dispatch(setOpenIncomeModal());
-      } else {
-        // Prompt user to enter timeframe first.
-        dispatch(setOpenTimeframeModal());
+    if (isDone) {
+      toastMessage(
+        "You have already placed your expense statements for today."
+      );
+    } else {
+      try {
+        const response = await userService.checkTimeFrame();
+        if (response.data.isDone) {
+          // Income and Statements are set!
+          dispatch(setOpenCreateModal());
+        } else if (response.data.isDone === false) {
+          // Prompt user to enter income and expense
+          dispatch(setOpenStatementModal());
+        } else {
+          // Prompt user to enter timeframe first.
+          dispatch(setOpenTimeframeModal());
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
     }
   };
 

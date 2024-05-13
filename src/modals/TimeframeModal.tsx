@@ -11,7 +11,7 @@ import {
 import { TextInput, Button } from "react-native-paper";
 import { useForm, Controller } from "react-hook-form";
 import { DropDown } from "@/components/DropDown";
-import React from "react";
+import React, { useEffect } from "react";
 
 //redux
 import { IRootState } from "store";

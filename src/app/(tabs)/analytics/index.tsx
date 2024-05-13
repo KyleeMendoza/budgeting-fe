@@ -5,6 +5,10 @@ import Piechart from "@/components/Piechart";
 import { DropDown } from "@/components/DropDown";
 import ForecastLineChart from "@/components/ForecastLineChart";
 
+//redux
+import { IRootState } from "store";
+import { useSelector, useDispatch } from "react-redux";
+
 const dateFilter = [
   { label: "Daily", value: "daily" },
   { label: "Weekly", value: "weekly" },
@@ -14,6 +18,10 @@ const dateFilter = [
 export default function analytics() {
   const { top } = useSafeAreaInsets();
   const [value, setValue] = useState(null);
+
+  const balance = useSelector((state: IRootState) => state.user.balance);
+  const expenses = useSelector((state: IRootState) => state.user.expenses);
+
   return (
     <View
       style={{
@@ -39,7 +47,7 @@ export default function analytics() {
                   Total Income:
                 </Text>
                 <Text className="font-['Poppins-Bold'] text-2xl text-white">
-                  P40,000
+                  {(balance + expenses).toLocaleString()}
                 </Text>
               </View>
               <View className="flex-1 rounded-lg flex justify-center items-center bg-['#FAA0A0'] py-4">
@@ -47,13 +55,16 @@ export default function analytics() {
                   Total Expense:
                 </Text>
                 <Text className="font-['Poppins-Bold'] text-2xl text-white">
-                  P25,000
+                  {expenses.toLocaleString()}
                 </Text>
               </View>
             </View>
             <View className="area-container w-full h-80 rounded-2xl">
               <Text className="font-['Poppins-Bold'] text-lg">
                 Budget Projection
+              </Text>
+              <Text className="font-['Poppins-Regular'] text-sm italic">
+                dummy data
               </Text>
               <ForecastLineChart />
               {/* FIX: fix the scrollable line graph */}
