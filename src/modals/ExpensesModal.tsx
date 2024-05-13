@@ -123,21 +123,25 @@ export default function ExpensesModal() {
       }
     }
 
-    try {
-      const response = await userService.postInitialExpences(
-        transformedData,
-        `${timeframe} ${timeframeNumber}`
-      );
-      if (response.status === 200) {
-        toastMessage("Statements successfully added.");
-        dispatch(setExpenseData(transformedData));
-        dispatch(setCloseStatementModal());
-      } else {
-        toastMessage("There was an error setting expenses.");
-      }
-    } catch (error) {
-      toastMessage("There was an error setting expenses.");
-    }
+    // try {
+    //   const response = await userService.postInitialExpences(
+    //     transformedData,
+    //     `${timeframe} ${timeframeNumber}`
+    //   );
+    //   if (response.status === 200) {
+    //     toastMessage("Statements successfully added.");
+    //     dispatch(setExpenseData(transformedData));
+    //     dispatch(setCloseStatementModal());
+    //     console.log("Timeframe is set.");
+    //   } else {
+    //     toastMessage("There was an error setting expenses.");
+    //   }
+    // } catch (error) {
+    //   toastMessage("There was an error setting expenses.");
+    // }
+
+    console.log("income: ", income);
+    console.log("expenseData: ", transformedData);
   };
 
   return (
@@ -215,7 +219,7 @@ export default function ExpensesModal() {
                     )}
                   </View>
                 </View>
-                <View className="entry-container flex gap-2">
+                {/* <View className="entry-container flex gap-2">
                   <Text className="font-[Poppins-Bold] text-sm">Entry 2</Text>
                   <View className="category-container w-full">
                     <Controller
@@ -370,7 +374,7 @@ export default function ExpensesModal() {
                       </Text>
                     )}
                   </View>
-                </View>
+                </View> */}
               </View>
             </ScrollView>
             <View className="w-full">

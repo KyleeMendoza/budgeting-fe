@@ -18,8 +18,9 @@ import { IRootState } from "store";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setOpenIncomeModal,
-  setOpenStatementModal,
+  setOpenTimeframeModal,
   setOpenCreateModal,
+  setOpenStatementModal,
 } from "@/Slice/modalSlice";
 
 export default function TabLayout() {
@@ -33,7 +34,7 @@ export default function TabLayout() {
   }
 
   if (!session) {
-    return <Redirect href="/login" />;
+    return <Redirect href="/Login" />;
   }
   {
     /* TODO: Comment this out to remove auth */
@@ -47,11 +48,11 @@ export default function TabLayout() {
         // Income and Statements are set!
         dispatch(setOpenCreateModal());
       } else if (response.data.isDone === false) {
-        // Prompt user to enter expenses after initializing their income.
-        dispatch(setOpenStatementModal());
-      } else {
-        // Prompt user to enter their income first.
+        // Prompt user to enter income and expense
         dispatch(setOpenIncomeModal());
+      } else {
+        // Prompt user to enter timeframe first.
+        dispatch(setOpenTimeframeModal());
       }
     } catch (error) {
       console.error(error);

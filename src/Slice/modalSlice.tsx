@@ -4,6 +4,7 @@ const initialState = {
   incomeModal: false,
   statementModal: false,
   createModal: false,
+  timeframeModal: false,
 };
 
 const ModalSlice = createSlice({
@@ -28,6 +29,12 @@ const ModalSlice = createSlice({
     setCloseCreateModal: (state) => {
       state.createModal = false;
     },
+    setOpenTimeframeModal: (state) => {
+      state.timeframeModal = true;
+    },
+    setCloseTimeframeModal: (state) => {
+      state.timeframeModal = false;
+    },
   },
 });
 
@@ -38,6 +45,8 @@ export const {
   setCloseStatementModal,
   setOpenCreateModal,
   setCloseCreateModal,
+  setOpenTimeframeModal,
+  setCloseTimeframeModal,
 } = ModalSlice.actions;
 
 export default ModalSlice.reducer;

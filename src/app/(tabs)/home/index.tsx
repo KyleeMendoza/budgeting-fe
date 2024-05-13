@@ -18,7 +18,12 @@ import userService from "@/services/user.service";
 import { IRootState } from "store";
 import { useSelector, useDispatch } from "react-redux";
 import { setCredits } from "@/Slice/userSlice";
-import { setOpenIncomeModal, setOpenStatementModal } from "@/Slice/modalSlice";
+import {
+  setOpenTimeframeModal,
+  setOpenIncomeModal,
+  setOpenStatementModal,
+} from "@/Slice/modalSlice";
+import TimeframeModal from "@/modals/TimeframeModal";
 
 const icons = [
   {
@@ -64,6 +69,7 @@ export default function home() {
   const name = useSelector((state: IRootState) => state.user.name);
   const balance = useSelector((state: IRootState) => state.user.balance);
   const income = useSelector((state: IRootState) => state.user.income);
+  const timeframe = useSelector((state: IRootState) => state.user.timeframe);
   const expenses = useSelector((state: IRootState) => state.user.expenses);
   const expenseData = useSelector(
     (state: IRootState) => state.user.expenseData
@@ -123,11 +129,11 @@ export default function home() {
         // Run the initializer function again.
         getUserSavingsAndExpense();
       } else if (response.data.isDone === false) {
-        // Prompt user to enter expenses after initializing their income.
-        dispatch(setOpenStatementModal());
-      } else {
-        // Prompt user to enter their income first.
+        // Prompt user to enter income and expense
         dispatch(setOpenIncomeModal());
+      } else {
+        // Prompt user to enter timeframe first.
+        dispatch(setOpenTimeframeModal());
       }
     } catch (error) {
       console.error(error);
@@ -136,7 +142,7 @@ export default function home() {
 
   useEffect(() => {
     checkTimeFrame();
-  }, [income, expenseData]);
+  }, [timeframe, expenseData]);
 
   return (
     <View
@@ -146,6 +152,7 @@ export default function home() {
       }}
     >
       <ScrollView>
+        <TimeframeModal />
         <IncomeModal />
         <ExpensesModal />
         <CreateExpensesModal />

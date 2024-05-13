@@ -11,6 +11,7 @@ const checkTimeFrame = async () => {
   }
 };
 
+// timeframe
 const postIncomeTimeframe = async (income: String, Timeframe: String) => {
   const body = {
     income,
@@ -25,6 +26,21 @@ const postIncomeTimeframe = async (income: String, Timeframe: String) => {
   }
 };
 
+// income
+const postIncome = async (income: String) => {
+  const body = {
+    income,
+  };
+
+  try {
+    const response = await axios.post(`${baseURL}/mb/input/income`, body);
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+//expenses
 const postInitialExpences = async (budgetCategories: any, date: string) => {
   const body = {
     budgetCategories,
@@ -70,6 +86,7 @@ const getTimeframe = async () => {
 export default {
   checkTimeFrame,
   postIncomeTimeframe,
+  postIncome,
   postInitialExpences,
   getExpenses,
   getUserSavingsAndExpense,

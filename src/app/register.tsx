@@ -71,7 +71,7 @@ export default function register() {
 
         if (response.status === 201) {
           toastMessage("Successfully created.");
-          router.replace("/login");
+          router.replace("/Login");
         } else {
           console.log(response.data.message);
           toastMessage("There was an error registering.");
@@ -257,7 +257,7 @@ export default function register() {
                 paddingVertical: 5,
                 backgroundColor: "#00bfa5",
               }}
-              labelStyle={{ fontSize: 16 }}
+              labelStyle={{ fontSize: 16, color: "white" }}
             >
               register
             </Button>
@@ -266,7 +266,7 @@ export default function register() {
             <Text>Already have an account? </Text>
             <Text
               className="underline text-blue-600"
-              onPress={() => router.replace("/login")}
+              onPress={() => router.replace("/Login")}
             >
               Log in
             </Text>

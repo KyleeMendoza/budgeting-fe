@@ -16,20 +16,26 @@ import React from "react";
 //redux
 import { IRootState } from "store";
 import { useSelector, useDispatch } from "react-redux";
-import { setCloseIncomeModal, setOpenStatementModal } from "@/Slice/modalSlice";
-import { setIncome } from "@/Slice/userSlice";
+import { setCloseTimeframeModal } from "@/Slice/modalSlice";
+import { setTimeframe } from "@/Slice/userSlice";
 
 //API
 import userService from "@/services/user.service";
 
 interface FormData {
-  income: string;
+  timeframe: string;
 }
 
-export default function IncomeModal() {
+const dateFilter = [
+  { label: "Daily", value: "daily" },
+  { label: "Weekly", value: "weekly" },
+  { label: "Monthly", value: "monthly" },
+];
+
+export default function TimeframeModal() {
   const dispatch = useDispatch();
-  const incomeModal = useSelector(
-    (state: IRootState) => state.modal.incomeModal
+  const timeframeModal = useSelector(
+    (state: IRootState) => state.modal.timeframeModal
   );
 
   //TOAST
@@ -43,39 +49,34 @@ export default function IncomeModal() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      income: "",
+      timeframe: "",
     },
   });
 
   const onSubmit = async (data: FormData) => {
-    const income = data.income;
+    const timeframe = data.timeframe;
 
-    // try {
-    //   const response = await userService.postIncome(income);
-    //   if (response.status === 200) {
-    //     dispatch(setIncome(income));
-    //     dispatch(setCloseIncomeModal());
-    //     console.log("Income is set.");
-    //     dispatch(setOpenStatementModal()); //after setting income, set expenses
-    //   } else {
-    //     toastMessage("There was an error setting income.");
-    //   }
-    // } catch (error) {
-    //   toastMessage("There was an error setting income.");
-    // }
-    dispatch(setIncome(income));
-    dispatch(setCloseIncomeModal());
-    console.log("Income is set, ", income);
-    dispatch(setOpenStatementModal());
+    try {
+      const response = await userService.postIncomeTimeframe("0", timeframe);
+      if (response.status === 200) {
+        dispatch(setTimeframe(timeframe));
+        dispatch(setCloseTimeframeModal());
+        console.log("Timeframe is set.");
+      } else {
+        toastMessage("There was an error setting income.");
+      }
+    } catch (error) {
+      toastMessage("There was an error setting income.");
+    }
   };
 
   return (
     <Modal
       animationType="fade"
       transparent={true}
-      visible={incomeModal}
+      visible={timeframeModal}
       onRequestClose={() => {
-        dispatch(setCloseIncomeModal());
+        dispatch(setCloseTimeframeModal());
       }}
     >
       <View style={styles.centeredView}>
@@ -87,7 +88,7 @@ export default function IncomeModal() {
             style={styles.modalText}
             className="font-['Poppins-Regular'] text-sm"
           >
-            Enter your income.
+            Enter your preferred timeframe.
           </Text>
           <View className="w-full flex flex-col gap-2">
             <Controller
@@ -96,43 +97,7 @@ export default function IncomeModal() {
                 required: true,
               }}
               render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  mode="outlined"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  theme={{ roundness: 10 }}
-                  activeOutlineColor="#1bcf9a"
-                  outlineStyle={{ backgroundColor: "white" }}
-                  contentStyle={{ color: "black" }}
-                  placeholder="₱"
-                  keyboardType="numeric"
-                />
-              )}
-              name="income"
-            />
-            {errors.income && (
-              <Text className="text-sm text-red-600 italic">
-                This field is required.
-              </Text>
-            )}
-            {/* <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  mode="outlined"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  theme={{ roundness: 10 }}
-                  activeOutlineColor="#1bcf9a"
-                  outlineStyle={{ backgroundColor: "white" }}
-                  contentStyle={{ color: "black" }}
-                  placeholder="Daily, Weekly, Monthly"
-                />
+                <DropDown filter={dateFilter} value={value} setter={onChange} />
               )}
               name="timeframe"
             />
@@ -140,7 +105,7 @@ export default function IncomeModal() {
               <Text className="text-sm text-red-600 italic">
                 This field is required.
               </Text>
-            )} */}
+            )}
             <Button
               mode="contained"
               uppercase
@@ -155,13 +120,6 @@ export default function IncomeModal() {
               Save
             </Button>
           </View>
-
-          {/* <Pressable
-            onPress={() => dispatch(setCloseIncomeModal())}
-            style={[styles.button, styles.buttonClose]}
-          >
-            <Text style={styles.textStyle}>Hide Modal</Text>
-          </Pressable> */}
         </View>
       </View>
     </Modal>

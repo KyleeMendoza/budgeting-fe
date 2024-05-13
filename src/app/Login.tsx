@@ -37,7 +37,7 @@ interface TokenData {
   mobile: string;
 }
 
-export default function login() {
+export default function Login() {
   const { top } = useSafeAreaInsets();
   const { signIn } = useSession();
   const windowHeight = useWindowDimensions().height;
