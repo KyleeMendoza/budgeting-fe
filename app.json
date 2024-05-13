@@ -14,9 +14,24 @@
           "origin": "https://n"
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-font"
     ],
     "name": "budgeting-fe",
-    "slug": "budgeting-fe"
+    "slug": "budgeting-fe",
+    "android": {
+      "config": {
+        "usesCleartextTraffic": true
+      },
+      "package": "com.matt.lim.budgetingfe"
+    },
+    "extra": {
+      "router": {
+        "origin": "https://n"
+      },
+      "eas": {
+        "projectId": "14203ee2-a202-4efe-bc7d-d6f0f6e4e274"
+      }
+    }
   }
 }
