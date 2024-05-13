@@ -14,9 +14,28 @@
           "origin": "https://n"
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
     ],
     "name": "budgeting-fe",
-    "slug": "budgeting-fe"
+    "slug": "budgeting-fe",
+    "android": {
+      "package": "com.kylemendoza67.budgetingfe"
+    },
+    "extra": {
+      "router": {
+        "origin": "https://n"
+      },
+      "eas": {
+        "projectId": "50c42e77-5ea4-4da2-9892-6f3efd94352f"
+      }
+    }
   }
 }
