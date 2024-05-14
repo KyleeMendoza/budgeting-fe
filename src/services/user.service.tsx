@@ -92,6 +92,16 @@ const getTimeframe = async () => {
   }
 };
 
+// GRAPH
+const getArimaGraph = async () => {
+  try {
+    const response = await axios.get(`${baseURL}/mb/arima/expenses`);
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export default {
   checkTimeFrame,
   postIncomeTimeframe,
@@ -101,4 +111,5 @@ export default {
   getExpensesSummary,
   getUserSavingsAndExpense,
   getTimeframe,
+  getArimaGraph,
 };

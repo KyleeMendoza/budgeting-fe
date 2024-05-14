@@ -47,7 +47,6 @@ export default function Piechart() {
           gradientCenterColor: getRandomColor(),
         }));
 
-        console.log("analyticsData: ", transformedData);
         setExpenseDataDisplay(transformedData);
       } catch (error) {
         console.error(error);

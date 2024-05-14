@@ -8,6 +8,7 @@ import {
   StyleSheet,
   ToastAndroid,
 } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { TextInput, Button } from "react-native-paper";
 import { useForm, Controller } from "react-hook-form";
 import { DropDown } from "@/components/DropDown";
@@ -81,6 +82,15 @@ export default function TimeframeModal() {
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
+          <Ionicons
+            size={28}
+            name="close"
+            color="#00bfa5"
+            onPress={() => {
+              dispatch(setCloseTimeframeModal());
+            }}
+            style={{ position: "absolute", top: 10, right: 10 }}
+          />
           <Text className="font-['Poppins-Bold'] text-xl uppercase">
             Get Started!
           </Text>

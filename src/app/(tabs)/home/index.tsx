@@ -20,8 +20,11 @@ import { setCredits, setIsDone, setTimeframe } from "@/Slice/userSlice";
 import {
   setOpenTimeframeModal,
   setOpenStatementModal,
+  setOpenTipsModal,
 } from "@/Slice/modalSlice";
 import TimeframeModal from "@/modals/TimeframeModal";
+import ForecastModal from "@/modals/ForecastModal";
+import SavingTipsModal from "@/modals/SavingTipsModal";
 
 const icons = [
   {
@@ -154,13 +157,20 @@ export default function home() {
         <TimeframeModal />
         <ExpensesModal />
         <CreateExpensesModal />
+        <ForecastModal />
+        <SavingTipsModal />
         <View className="main-container size-full flex items-center p-5 gap-8 bg-background">
           <View className="info-container w-full flex flex-row justify-between items-center ">
             <View>
               <Text className="font-['Poppins-Regular'] text-lg">Welcome,</Text>
               <Text className="font-['Poppins-Bold'] text-xl">{name}</Text>
             </View>
-            <Ionicons size={28} name="notifications" color="#00bfa5" />
+            <Ionicons
+              size={28}
+              name="bulb"
+              color="#00bfa5"
+              onPress={() => dispatch(setOpenTipsModal())}
+            />
           </View>
           <LinearGradient
             colors={["#00bfa5", "#004d40"]}
