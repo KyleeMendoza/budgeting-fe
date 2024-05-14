@@ -74,6 +74,15 @@ const getExpenses = async () => {
   }
 };
 
+const getExpensesSummary = async () => {
+  try {
+    const response = await axios.get(`${baseURL}/mb/user/expenses-summary`);
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const getTimeframe = async () => {
   try {
     const response = await axios.get(`${baseURL}/mb/user/budget`);
@@ -89,6 +98,7 @@ export default {
   postIncome,
   postInitialExpences,
   getExpenses,
+  getExpensesSummary,
   getUserSavingsAndExpense,
   getTimeframe,
 };

@@ -61,7 +61,7 @@ export default function Piechart() {
   }, [isDone]);
 
   return (
-    <View className="h-full flex justify-center">
+    <View className="h-80  flex justify-center">
       <View style={{ alignItems: "center" }}>
         <PieChart
           data={expenseDataDisplay ? expenseDataDisplay : pieData}

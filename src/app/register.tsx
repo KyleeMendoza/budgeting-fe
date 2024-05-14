@@ -116,6 +116,7 @@ export default function register() {
                     theme={{ roundness: 50 }}
                     activeOutlineColor="#1bcf9a"
                     outlineStyle={{ backgroundColor: "white" }}
+                    contentStyle={{ color: "black" }}
                   />
                 )}
                 name="name"
@@ -140,6 +141,7 @@ export default function register() {
                     theme={{ roundness: 50 }}
                     activeOutlineColor="#1bcf9a"
                     outlineStyle={{ backgroundColor: "white" }}
+                    contentStyle={{ color: "black" }}
                   />
                 )}
                 name="username"
@@ -164,6 +166,7 @@ export default function register() {
                     theme={{ roundness: 50 }}
                     activeOutlineColor="#1bcf9a"
                     outlineStyle={{ backgroundColor: "white" }}
+                    contentStyle={{ color: "black" }}
                   />
                 )}
                 name="email"
@@ -188,6 +191,8 @@ export default function register() {
                     theme={{ roundness: 50 }}
                     activeOutlineColor="#1bcf9a"
                     outlineStyle={{ backgroundColor: "white" }}
+                    contentStyle={{ color: "black" }}
+                    keyboardType="numeric"
                   />
                 )}
                 name="mobile"
@@ -212,6 +217,7 @@ export default function register() {
                     theme={{ roundness: 50 }}
                     activeOutlineColor="#1bcf9a"
                     outlineStyle={{ backgroundColor: "white" }}
+                    contentStyle={{ color: "black" }}
                     secureTextEntry
                   />
                 )}
@@ -237,6 +243,7 @@ export default function register() {
                     theme={{ roundness: 50 }}
                     activeOutlineColor="#1bcf9a"
                     outlineStyle={{ backgroundColor: "white" }}
+                    contentStyle={{ color: "black" }}
                     secureTextEntry
                   />
                 )}

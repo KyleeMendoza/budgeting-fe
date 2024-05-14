@@ -1,8 +1,12 @@
 import { View, Text } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LineChart } from "react-native-gifted-charts";
 
-export default function ForecastLineChart() {
+//API
+import userService from "@/services/user.service";
+
+export default function ForecastLineChart({ timeframe }) {
+  const [data, setData] = useState([]);
   const dPoint = () => {
     return (
       <View
@@ -18,49 +22,31 @@ export default function ForecastLineChart() {
     );
   };
 
-  const latestData = [
-    {
-      value: 100,
-      labelComponent: () => lcomp("22 Nov"),
-      customDataPoint: dPoint,
-    },
-    {
-      value: 120,
-      labelComponent: () => lcomp("23 Nov"),
-      customDataPoint: dPoint,
-    },
-    {
-      value: 210,
-      labelComponent: () => lcomp("24 Nov"),
-      customDataPoint: dPoint,
-    },
-    {
-      value: 250,
-      labelComponent: () => lcomp("25 Nov"),
-      customDataPoint: dPoint,
-    },
-    {
-      value: 320,
-      labelComponent: () => lcomp("26 Nov"),
-      customDataPoint: dPoint,
-    },
-    {
-      value: 305,
-      labelComponent: () => lcomp("27 Nov"),
-      customDataPoint: dPoint,
-    },
-    {
-      value: 335,
-      labelComponent: () => lcomp("28 Nov"),
-      customDataPoint: dPoint,
-    },
-  ];
-
-  const [currentData, setCurrentData] = useState(latestData);
-
   const lcomp = (date: any) => (
     <Text style={{ color: "black", fontSize: 14 }}>{date}</Text>
   );
+
+  useEffect(() => {
+    const fetchExpenseDataSummary = async () => {
+      try {
+        const response = await userService.getExpensesSummary();
+
+        const transformData = Object.keys(response.data).map((day) => ({
+          value: response.data[day].totalIncome - response.data[day].savings,
+          labelComponent: () => lcomp(day.slice(5)),
+          customDataPoint: dPoint,
+        }));
+
+        setData(transformData);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (timeframe) {
+      fetchExpenseDataSummary();
+    }
+  }, [timeframe]);
 
   return (
     <View className="h-full flex justify-center">
@@ -68,10 +54,9 @@ export default function ForecastLineChart() {
         areaChart
         isAnimated
         thickness={3}
-        maxValue={600}
         startOpacity={1}
         noOfSections={5}
-        data={currentData}
+        data={data ? data : []}
         rulesType="solid"
         endOpacity={0.1}
         yAxisThickness={2}
@@ -79,14 +64,11 @@ export default function ForecastLineChart() {
         color="#eeee"
         animationDuration={1000}
         backgroundColor="transparent"
-        // yAxisLabelSuffix="% "
-        //   stepHeight={AppTheme.WP(10)}
         startFillColor={"#00bfa5"}
         endFillColor={"rgb(84,219,234)"}
         rulesColor="gray"
         yAxisColor="black"
         xAxisColor="black"
-        //   spacing={AppTheme.WP(10)}
         yAxisTextStyle={{
           color: "black",
         }}
