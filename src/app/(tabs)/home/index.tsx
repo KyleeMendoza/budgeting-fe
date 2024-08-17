@@ -16,12 +16,15 @@ import userService from "@/services/user.service";
 //redux
 import { IRootState } from "store";
 import { useSelector, useDispatch } from "react-redux";
-import { setCredits, setIsDone } from "@/Slice/userSlice";
+import { setCredits, setIsDone, setTimeframe } from "@/Slice/userSlice";
 import {
   setOpenTimeframeModal,
   setOpenStatementModal,
+  setOpenTipsModal,
 } from "@/Slice/modalSlice";
 import TimeframeModal from "@/modals/TimeframeModal";
+import ForecastModal from "@/modals/ForecastModal";
+import SavingTipsModal from "@/modals/SavingTipsModal";
 
 const icons = [
   {
@@ -83,6 +86,7 @@ export default function home() {
             expenses: response.data.overall_expense,
           })
         );
+        dispatch(setTimeframe({ timeframe: response.data.Timeframe }));
       } else {
         dispatch(
           setCredits({
@@ -90,6 +94,26 @@ export default function home() {
             expenses: 0,
           })
         );
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const checkTimeFrame = async () => {
+    try {
+      const response = await userService.checkTimeFrame();
+      if (response.data.isDone) {
+        console.log("Income and Statements are set!");
+        // Run the initializer function again.
+        getUserSavingsAndExpense();
+        dispatch(setIsDone()); //user is done making expense statements for the day.
+      } else if (response.data.isDone === false) {
+        // Prompt user to enter income and expense
+        dispatch(setOpenStatementModal());
+      } else {
+        // Prompt user to enter timeframe first.
+        dispatch(setOpenTimeframeModal());
       }
     } catch (error) {
       console.error(error);
@@ -119,26 +143,6 @@ export default function home() {
   }, [expenses]);
 
   useEffect(() => {
-    const checkTimeFrame = async () => {
-      try {
-        const response = await userService.checkTimeFrame();
-        if (response.data.isDone) {
-          console.log("Income and Statements are set!");
-          // Run the initializer function again.
-          getUserSavingsAndExpense();
-          dispatch(setIsDone()); //user is done making expense statements for the day.
-        } else if (response.data.isDone === false) {
-          // Prompt user to enter income and expense
-          dispatch(setOpenStatementModal());
-        } else {
-          // Prompt user to enter timeframe first.
-          dispatch(setOpenTimeframeModal());
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     checkTimeFrame();
   }, [timeframe, expenseData]);
 
@@ -153,13 +157,20 @@ export default function home() {
         <TimeframeModal />
         <ExpensesModal />
         <CreateExpensesModal />
+        <ForecastModal />
+        <SavingTipsModal />
         <View className="main-container size-full flex items-center p-5 gap-8 bg-background">
           <View className="info-container w-full flex flex-row justify-between items-center ">
             <View>
               <Text className="font-['Poppins-Regular'] text-lg">Welcome,</Text>
               <Text className="font-['Poppins-Bold'] text-xl">{name}</Text>
             </View>
-            <Ionicons size={28} name="notifications" color="#00bfa5" />
+            <Ionicons
+              size={28}
+              name="bulb"
+              color="#00bfa5"
+              onPress={() => dispatch(setOpenTipsModal())}
+            />
           </View>
           <LinearGradient
             colors={["#00bfa5", "#004d40"]}
@@ -184,9 +195,16 @@ export default function home() {
                   Income:
                 </Text>
                 <Text className="font-['Poppins-Bold'] text-2xl text-white">
-                  {balance && expenses
-                    ? `₱ ${(balance + expenses).toLocaleString()}`
-                    : "0"}
+                  {balance && expenses ? (
+                    `₱ ${(balance + expenses).toLocaleString()}`
+                  ) : (
+                    <Ionicons
+                      size={28}
+                      name="add"
+                      color="white"
+                      onPress={checkTimeFrame}
+                    />
+                  )}
                 </Text>
               </View>
               <View>
@@ -213,7 +231,7 @@ export default function home() {
               {expenseDataDisplay.length > 0 ? (
                 expenseDataDisplay.slice(0, 6).map((data, index) => (
                   <View
-                    className="w-full flex flex-row items-center justify-between rounded-lg p-4 bg-white"
+                    className="w-full flex flex-row items-center justify-between rounded-lg p-4 bg-white border-[1px] border-[#00bfa5]"
                     key={index}
                   >
                     <View className="flex flex-row justify-center items-center gap-5">

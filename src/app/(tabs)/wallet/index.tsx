@@ -103,12 +103,37 @@ export default function wallet() {
   const balance = useSelector((state: IRootState) => state.user.balance);
   const expenses = useSelector((state: IRootState) => state.user.expenses);
 
+  // useEffect(() => {
+  //   const expensesData = async () => {
+  //     try {
+  //       const response = await userService.getExpenses();
+  //       const latestEntries = response.data[response.data.length - 1];
+  //       setExpenseDataDisplay(latestEntries);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+
+  //   //if data entry has been made, call this. if not, ignore.
+  //   if (expenses !== 0) {
+  //     expensesData();
+  //   }
+  // }, [expenses]);
+
   useEffect(() => {
     const expensesData = async () => {
       try {
-        const response = await userService.getExpenses();
-        const latestEntries = response.data[response.data.length - 1];
-        setExpenseDataDisplay(latestEntries);
+        const response = await userService.getExpensesSummary();
+
+        const result = Object.keys(response.data).map((key) => {
+          return { [key]: response.data[key] };
+        });
+        setExpenseDataDisplay(result);
+
+        // const keys = result.map((obj) => Object.keys(obj)[0]);
+
+        // const latestEntries = response.data[response.data.length - 1];
+        // setExpenseDataDisplay(latestEntries);
       } catch (error) {
         console.error(error);
       }
@@ -141,41 +166,46 @@ export default function wallet() {
           </View>
           <View className="statements-container w-full px-2 gap-3">
             <View className="flex flex-row justify-between">
-              <Text className="font-['Poppins-Bold']">Recent Statements</Text>
+              <Text className="font-['Poppins-Bold']">Statements History</Text>
             </View>
             <View className="flex gap-3">
               {expenseDataDisplay.length > 0 ? (
-                expenseDataDisplay.slice(0, 6).map((data, index) => (
-                  <View
-                    className="w-full flex flex-row items-center justify-between rounded-lg p-4 bg-white"
-                    key={index}
-                  >
-                    <View className="flex flex-row justify-center items-center gap-5">
-                      {icons.map((item, index) =>
-                        item.category === data.category ? (
-                          <View
-                            className="size-12 rounded-xl flex justify-center items-center"
-                            key={index}
-                          >
-                            {item.icon}
-                          </View>
-                        ) : null
-                      )}
-
-                      <View className="flex flex-col">
-                        <Text className="font-['Poppins-Bold'] text-lg">
-                          {data.category}
-                        </Text>
-                        <Text className="font-['Poppins-Regular'] text-xs">
-                          {data.date}
-                        </Text>
+                expenseDataDisplay.slice(0, 6).map((data, index) => {
+                  const dayKey = Object.keys(data)[0];
+                  return (
+                    <View
+                      className="w-full flex flex-row items-center justify-between rounded-lg p-4 bg-white border-[1px] border-[#00bfa5]"
+                      key={index}
+                    >
+                      <View className="flex flex-row justify-center items-center gap-5">
+                        <View className="flex flex-col">
+                          <Text className="font-['Poppins-Bold'] text-lg">
+                            {dayKey}
+                          </Text>
+                          <Text>
+                            <Text className="font-['Poppins-Regular'] text-xs">
+                              Highest:{" "}
+                              {data[dayKey].maxPercentageExpense.category}{" "}
+                            </Text>
+                            <Text className="font-['Poppins-Regular'] text-xs">
+                              {"(" +
+                                data[
+                                  dayKey
+                                ].maxPercentageExpense.amount.toLocaleString() +
+                                ")"}
+                            </Text>
+                          </Text>
+                        </View>
                       </View>
+                      <Text className="font-['Poppins-Regular']">
+                        P
+                        {(
+                          data[dayKey].totalIncome - data[dayKey].savings
+                        ).toLocaleString()}
+                      </Text>
                     </View>
-                    <Text className="font-['Poppins-Regular']">
-                      P{data.allocated_amount}
-                    </Text>
-                  </View>
-                ))
+                  );
+                })
               ) : (
                 <Text className="italic">No expenses to display.</Text>
               )}

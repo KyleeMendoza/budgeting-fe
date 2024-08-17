@@ -1,5 +1,5 @@
 import { View, Text, Image, useWindowDimensions } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { ToastAndroid } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
@@ -11,6 +11,7 @@ import {
   Button,
   Modal,
   Portal,
+  Icon,
 } from "react-native-paper";
 import { useForm, Controller } from "react-hook-form";
 import spendcast from "../assets/img/spendcast.png";
@@ -42,6 +43,7 @@ export default function Login() {
   const { signIn } = useSession();
   const windowHeight = useWindowDimensions().height;
   const dispatch = useDispatch();
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   //TOAST
   const toastMessage = (message: string) => {
@@ -101,10 +103,11 @@ export default function Login() {
   return (
     <PaperProvider>
       <View
-        className="flex-1 justify-center items-center"
-        style={{ paddingTop: top, minHeight: Math.round(windowHeight) }}
+        className="flex-1 justify-center items-center flex flex-col gap-10"
+        // style={{ paddingTop: top, minHeight: Math.round(windowHeight) }}
+        style={{ paddingTop: top }}
       >
-        <View className="absolute top-28 flex justify-center items-center">
+        <View>
           <Image source={spendcast} className="w-72 h-28" />
         </View>
         <View className="w-[85%] flex flex-col justify-center items-center gap-2">
@@ -157,9 +160,22 @@ export default function Login() {
                     onBlur={onBlur}
                     theme={{ roundness: 50 }}
                     activeOutlineColor="#1bcf9a"
-                    secureTextEntry
+                    secureTextEntry={passwordVisible}
                     outlineStyle={{ backgroundColor: "white" }}
                     contentStyle={{ color: "black" }}
+                    right={
+                      passwordVisible ? (
+                        <TextInput.Icon
+                          icon="eye-off"
+                          onPress={() => setPasswordVisible(false)}
+                        />
+                      ) : (
+                        <TextInput.Icon
+                          icon="eye"
+                          onPress={() => setPasswordVisible(true)}
+                        />
+                      )
+                    }
                   />
                 )}
                 name="password"

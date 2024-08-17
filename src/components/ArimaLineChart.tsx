@@ -2,11 +2,8 @@ import { View, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import { LineChart } from "react-native-gifted-charts";
 
-//API
-import userService from "@/services/user.service";
-
-export default function ForecastLineChart({ timeframe }) {
-  const [data, setData] = useState([]);
+export default function ArimaLineChart({ data }) {
+  const [arima, setArima] = useState([]);
   const dPoint = () => {
     return (
       <View
@@ -27,36 +24,24 @@ export default function ForecastLineChart({ timeframe }) {
   );
 
   useEffect(() => {
-    const fetchExpenseDataSummary = async () => {
-      try {
-        const response = await userService.getExpensesSummary();
+    const transformedArray = data.map((item) => ({
+      value: item.totalAmount,
+      labelComponent: () => lcomp(item.date),
+      customDataPoint: dPoint,
+    }));
 
-        const transformData = Object.keys(response.data).map((day) => ({
-          value: response.data[day].totalIncome - response.data[day].savings,
-          labelComponent: () => lcomp(day.slice(5)),
-          customDataPoint: dPoint,
-        }));
-
-        setData(transformData);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    if (timeframe) {
-      fetchExpenseDataSummary();
-    }
-  }, [timeframe]);
+    setArima(transformedArray);
+  }, []);
 
   return (
-    <View className="h-full flex justify-center">
+    <View className="flex justify-center pt-8">
       <LineChart
         areaChart
         isAnimated
         thickness={3}
         startOpacity={1}
         noOfSections={5}
-        data={data ? data : []}
+        data={arima ? arima : []}
         rulesType="solid"
         endOpacity={0.1}
         yAxisThickness={2}
@@ -72,7 +57,7 @@ export default function ForecastLineChart({ timeframe }) {
         yAxisTextStyle={{
           color: "black",
         }}
-        width={290}
+        width={230}
       />
     </View>
   );
