@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { set } from "react-hook-form";
 
 const initialState = {
   incomeModal: false,
@@ -8,6 +9,7 @@ const initialState = {
   forecastModal: false,
   tipsModal: false,
   smartModal: false,
+  passwordModal: false,
 };
 
 const ModalSlice = createSlice({
@@ -56,6 +58,12 @@ const ModalSlice = createSlice({
     setCloseSmartModal: (state) => {
       state.smartModal = false;
     },
+    setOpenPasswordModal: (state) => {
+      state.passwordModal = true;
+    },
+    setClosePasswordModal: (state) => {
+      state.passwordModal = false;
+    },
   },
 });
 
@@ -74,6 +82,8 @@ export const {
   setCloseTipsModal,
   setOpenSmartModal,
   setCloseSmartModal,
+  setOpenPasswordModal,
+  setClosePasswordModal,
 } = ModalSlice.actions;
 
 export default ModalSlice.reducer;

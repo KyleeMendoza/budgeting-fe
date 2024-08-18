@@ -33,7 +33,22 @@ const register = async (
   }
 };
 
+const updatePassword = async (currentPassword: String, newPassword: String) => {
+  const body = {
+    currentPassword,
+    newPassword,
+  };
+
+  try {
+    const response = await axios.post(`${baseURL}/mb/update/password`, body);
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export default {
   login,
   register,
+  updatePassword,
 };
