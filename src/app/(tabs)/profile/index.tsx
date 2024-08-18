@@ -3,6 +3,8 @@ import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSession } from "../../ctx";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useDispatch } from "react-redux";
+import { setOpenPasswordModal } from "@/Slice/modalSlice";
 
 //redux
 import { IRootState } from "store";
@@ -11,6 +13,7 @@ import { useSelector } from "react-redux";
 export default function profile() {
   const { signOut } = useSession();
   const { top } = useSafeAreaInsets();
+  const dispatch = useDispatch();
 
   const name = useSelector((state: IRootState) => state.user.name);
   const mobile = useSelector((state: IRootState) => state.user.mobile);
@@ -37,11 +40,16 @@ export default function profile() {
             </View>
           </View>
           <View className="w-full">
-            <TouchableOpacity className="w-full flex flex-row items-center rounded-lg p-4 gap-5">
+            <TouchableOpacity
+              className="w-full flex flex-row items-center rounded-lg p-4 gap-5"
+              onPress={() => dispatch(setOpenPasswordModal())}
+            >
               <Ionicons size={28} name="wallet" color="#00bfa5" />
-              <Text className="font-['Poppins-Regular'] text-lg">Wallet</Text>
+              <Text className="font-['Poppins-Regular'] text-lg">
+                Update password
+              </Text>
             </TouchableOpacity>
-            <TouchableOpacity className="w-full flex flex-row items-center rounded-lg p-4 gap-5">
+            {/* <TouchableOpacity className="w-full flex flex-row items-center rounded-lg p-4 gap-5">
               <Ionicons name="pricetag" size={24} color="#00bfa5" />
               <Text className="font-['Poppins-Regular'] text-lg">
                 Promotions
@@ -50,7 +58,7 @@ export default function profile() {
             <TouchableOpacity className="w-full flex flex-row items-center rounded-lg p-4 gap-5">
               <Ionicons name="settings" size={24} color="#00bfa5" />
               <Text className="font-['Poppins-Regular'] text-lg">Settings</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
               className="w-full flex flex-row items-center rounded-lg p-4 gap-5"
               onPress={() => signOut()}
