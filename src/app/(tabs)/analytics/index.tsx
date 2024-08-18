@@ -9,7 +9,7 @@ import { Button } from "react-native-paper";
 //redux
 import { IRootState } from "store";
 import { useSelector, useDispatch } from "react-redux";
-import { setOpenForecastModal } from "@/Slice/modalSlice";
+import { setOpenForecastModal, setOpenSmartModal } from "@/Slice/modalSlice";
 
 const dateFilter = [
   { label: "Daily", value: "daily" },
@@ -87,6 +87,21 @@ export default function analytics() {
                 <Text className="font-['Poppins-Bold'] text-lg">
                   Expense Projection
                 </Text>
+                <View className="w-[30%]">
+                  <Button
+                    mode="contained"
+                    uppercase
+                    onPress={() => dispatch(setOpenSmartModal())}
+                    style={{
+                      borderRadius: 5,
+                      paddingVertical: 0,
+                      backgroundColor: "#00bfa5",
+                    }}
+                    labelStyle={{ fontSize: 10, color: "white" }}
+                  >
+                    Tips
+                  </Button>
+                </View>
                 {timeframe ? null : (
                   <Text className="font-['Poppins-Regular'] text-sm italic">
                     No data to display.

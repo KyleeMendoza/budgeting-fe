@@ -7,6 +7,7 @@ const initialState = {
   timeframeModal: false,
   forecastModal: false,
   tipsModal: false,
+  smartModal: false,
 };
 
 const ModalSlice = createSlice({
@@ -49,6 +50,12 @@ const ModalSlice = createSlice({
     setCloseTipsModal: (state) => {
       state.tipsModal = false;
     },
+    setOpenSmartModal: (state) => {
+      state.smartModal = true;
+    },
+    setCloseSmartModal: (state) => {
+      state.smartModal = false;
+    },
   },
 });
 
@@ -65,6 +72,8 @@ export const {
   setCloseForecastModal,
   setOpenTipsModal,
   setCloseTipsModal,
+  setOpenSmartModal,
+  setCloseSmartModal,
 } = ModalSlice.actions;
 
 export default ModalSlice.reducer;
