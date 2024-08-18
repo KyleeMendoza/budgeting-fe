@@ -88,7 +88,7 @@ export default function register() {
     <PaperProvider>
       <View
         className="flex-1 justify-center items-center"
-        style={{ paddingTop: top, minHeight: Math.round(windowHeight) }}
+        style={{ paddingTop: top }}
       >
         <View className="w-[85%] flex flex-col justify-center items-center gap-10">
           <View className="flex flex-col justify-center items-center">
