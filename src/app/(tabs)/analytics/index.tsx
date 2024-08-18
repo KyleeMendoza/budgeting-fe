@@ -62,7 +62,14 @@ export default function analytics() {
               <View className="piechart-container w-full rounded-2xl">
                 <Piechart />
               </View>
-            ) : null}
+            ) : (
+              <View className="border-l-4 border-red-600 pl-4">
+                <Text className="font-bold">No Data Available. </Text>
+                <Text className="italic text-sm text-red-600">
+                  Please add an entry for today.
+                </Text>
+              </View>
+            )}
 
             <View className="card-container w-full flex flex-row gap-4">
               <View className="flex-1 rounded-lg flex justify-center items-center bg-['#00bfa5'] py-4">
@@ -87,22 +94,24 @@ export default function analytics() {
                 <Text className="font-['Poppins-Bold'] text-lg">
                   Expense Projection
                 </Text>
-                <View className="w-[30%]">
-                  <Button
-                    mode="contained"
-                    uppercase
-                    onPress={() => dispatch(setOpenSmartModal())}
-                    style={{
-                      borderRadius: 5,
-                      paddingVertical: 0,
-                      backgroundColor: "#00bfa5",
-                    }}
-                    labelStyle={{ fontSize: 10, color: "white" }}
-                  >
-                    Tips
-                  </Button>
-                </View>
-                {timeframe ? null : (
+
+                {timeframe ? (
+                  <View className="w-[30%]">
+                    <Button
+                      mode="contained"
+                      uppercase
+                      onPress={() => dispatch(setOpenSmartModal())}
+                      style={{
+                        borderRadius: 5,
+                        paddingVertical: 0,
+                        backgroundColor: "#00bfa5",
+                      }}
+                      labelStyle={{ fontSize: 10, color: "white" }}
+                    >
+                      Tips
+                    </Button>
+                  </View>
+                ) : (
                   <Text className="font-['Poppins-Regular'] text-sm italic">
                     No data to display.
                   </Text>

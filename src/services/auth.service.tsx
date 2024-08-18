@@ -47,8 +47,18 @@ const updatePassword = async (currentPassword: String, newPassword: String) => {
   }
 };
 
+const deleteAccount = async () => {
+  try {
+    const response = await axios.get(`${baseURL}/mb/delete/acc`);
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export default {
   login,
   register,
   updatePassword,
+  deleteAccount,
 };

@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSession } from "../../ctx";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useDispatch } from "react-redux";
-import { setOpenPasswordModal } from "@/Slice/modalSlice";
+import { setOpenPasswordModal, setOpenDeleteModal } from "@/Slice/modalSlice";
 
 //redux
 import { IRootState } from "store";
@@ -44,18 +44,21 @@ export default function profile() {
               className="w-full flex flex-row items-center rounded-lg p-4 gap-5"
               onPress={() => dispatch(setOpenPasswordModal())}
             >
-              <Ionicons size={28} name="wallet" color="#00bfa5" />
+              <Ionicons size={28} name="pencil" color="#00bfa5" />
               <Text className="font-['Poppins-Regular'] text-lg">
-                Update password
+                Update Password
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="w-full flex flex-row items-center rounded-lg p-4 gap-5"
+              onPress={() => dispatch(setOpenDeleteModal())}
+            >
+              <Ionicons name="trash" size={24} color="red" />
+              <Text className="font-['Poppins-Regular'] text-lg">
+                Delete Account
               </Text>
             </TouchableOpacity>
             {/* <TouchableOpacity className="w-full flex flex-row items-center rounded-lg p-4 gap-5">
-              <Ionicons name="pricetag" size={24} color="#00bfa5" />
-              <Text className="font-['Poppins-Regular'] text-lg">
-                Promotions
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity className="w-full flex flex-row items-center rounded-lg p-4 gap-5">
               <Ionicons name="settings" size={24} color="#00bfa5" />
               <Text className="font-['Poppins-Regular'] text-lg">Settings</Text>
             </TouchableOpacity> */}

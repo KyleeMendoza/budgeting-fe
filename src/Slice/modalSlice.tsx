@@ -10,6 +10,7 @@ const initialState = {
   tipsModal: false,
   smartModal: false,
   passwordModal: false,
+  deleteModal: false,
 };
 
 const ModalSlice = createSlice({
@@ -64,6 +65,12 @@ const ModalSlice = createSlice({
     setClosePasswordModal: (state) => {
       state.passwordModal = false;
     },
+    setOpenDeleteModal: (state) => {
+      state.deleteModal = true;
+    },
+    setCloseDeleteModal: (state) => {
+      state.deleteModal = false;
+    },
   },
 });
 
@@ -84,6 +91,8 @@ export const {
   setCloseSmartModal,
   setOpenPasswordModal,
   setClosePasswordModal,
+  setOpenDeleteModal,
+  setCloseDeleteModal,
 } = ModalSlice.actions;
 
 export default ModalSlice.reducer;
