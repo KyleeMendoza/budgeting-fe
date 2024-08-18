@@ -15,8 +15,8 @@ export default function Piechart() {
 
   const pieData = [
     {
-      name: "No Data",
-      value: 100,
+      name: "No Available Data",
+      value: 0,
       color: "#00bfa5",
       gradientCenterColor: "#00bfa5",
     },
@@ -39,7 +39,6 @@ export default function Piechart() {
       try {
         const response = await userService.getExpenses();
         const latestEntries = response.data[response.data.length - 1];
-
         const transformedData = latestEntries.map((item) => ({
           name: item.category,
           value: item.thisPercentage,
@@ -56,40 +55,53 @@ export default function Piechart() {
     //if data entry has been made, call this. if not, ignore.
     if (isDone) {
       expensesData();
+    } else {
+      setExpenseDataDisplay([]);
     }
   }, [isDone]);
 
   return (
-    <View className="h-80  flex justify-center">
-      <View style={{ alignItems: "center" }}>
-        <PieChart
-          data={expenseDataDisplay ? expenseDataDisplay : pieData}
-          donut
-          showGradient
-          focusOnPress
-          radius={100}
-          innerRadius={50}
-        />
-      </View>
-      <View className=" w-full flex flex-wrap flex-row justify-center gap-2">
-        {expenseDataDisplay &&
-          expenseDataDisplay.map((item, index) => (
-            <View className="flex flex-row gap-2 items-center" key={index}>
-              <View
-                className="size-3"
-                style={{ borderRadius: 50, backgroundColor: item.color }}
-              ></View>
-              <View className="flex flex-row gap-2">
-                <Text className="font-['Poppins-Regular'] text-sm">
-                  {item.name}:
-                </Text>
-                <Text className="font-['Poppins-Regular'] text-sm">
-                  {item.value}
-                </Text>
-              </View>
-            </View>
-          ))}
-      </View>
-    </View>
+    <>
+      {expenseDataDisplay.length > 0 ? (
+        <View className="h-80  flex justify-center">
+          <View style={{ alignItems: "center" }}>
+            <PieChart
+              data={expenseDataDisplay}
+              donut
+              showGradient
+              focusOnPress
+              radius={100}
+              innerRadius={50}
+            />
+          </View>
+          <View className=" w-full flex flex-wrap flex-row justify-center gap-2">
+            {expenseDataDisplay &&
+              expenseDataDisplay.map((item, index) => (
+                <View className="flex flex-row gap-2 items-center" key={index}>
+                  <View
+                    className="size-3"
+                    style={{ borderRadius: 50, backgroundColor: item.color }}
+                  ></View>
+                  <View className="flex flex-row gap-2">
+                    <Text className="font-['Poppins-Regular'] text-sm">
+                      {item.name}:
+                    </Text>
+                    <Text className="font-['Poppins-Regular'] text-sm">
+                      {item.value}
+                    </Text>
+                  </View>
+                </View>
+              ))}
+          </View>
+        </View>
+      ) : (
+        <View className="border-l-4 border-red-600 pl-4">
+          <Text className="font-bold">No Data Available. </Text>
+          <Text className="italic text-sm text-red-600">
+            Please add an entry for today.
+          </Text>
+        </View>
+      )}
+    </>
   );
 }

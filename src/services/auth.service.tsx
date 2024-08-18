@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "http://3.107.20.181";
+const baseURL = "http://54.237.120.196:3001";
 
 const login = async (email: String, password: String) => {
   const body = {

@@ -31,12 +31,20 @@ export default function ForecastLineChart({ timeframe }) {
       try {
         const response = await userService.getExpensesSummary();
 
-        const transformData = Object.keys(response.data).map((day) => ({
-          value: response.data[day].totalIncome - response.data[day].savings,
-          labelComponent: () => lcomp(day.slice(5)),
-          customDataPoint: dPoint,
-        }));
+        const transformData = Object.keys(response.data).map((day) => {
+          const formattedDay = new Date(day).toLocaleDateString("en-US", {
+            month: "numeric",
+            day: "numeric",
+          });
 
+          return {
+            value: response.data[day].totalIncome - response.data[day].savings,
+            labelComponent: () => lcomp(formattedDay), // Use the formatted day here
+            customDataPoint: dPoint,
+          };
+        });
+
+        console.log("data: ", response.data);
         setData(transformData);
       } catch (error) {
         console.error(error);
@@ -51,6 +59,8 @@ export default function ForecastLineChart({ timeframe }) {
   return (
     <View className="h-full flex justify-center">
       <LineChart
+        curved
+        rotateLabel
         areaChart
         isAnimated
         thickness={3}

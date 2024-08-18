@@ -160,18 +160,18 @@ export default function Login() {
                     onBlur={onBlur}
                     theme={{ roundness: 50 }}
                     activeOutlineColor="#1bcf9a"
-                    secureTextEntry={passwordVisible}
+                    secureTextEntry={!passwordVisible}
                     outlineStyle={{ backgroundColor: "white" }}
                     contentStyle={{ color: "black" }}
                     right={
                       passwordVisible ? (
                         <TextInput.Icon
-                          icon="eye-off"
+                          icon="eye"
                           onPress={() => setPasswordVisible(false)}
                         />
                       ) : (
                         <TextInput.Icon
-                          icon="eye"
+                          icon="eye-off"
                           onPress={() => setPasswordVisible(true)}
                         />
                       )
