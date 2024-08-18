@@ -77,36 +77,43 @@ export default function ExpensesModal() {
       percentage: parseInt(item.percentage),
     }));
 
+    //Check if percentages add up to 100
+    const totalPercentage = modifiedData.reduce(
+      (acc, item) => acc + item.percentage,
+      0
+    );
+
     if (income !== "" && expenseData.length !== 0) {
       if (expenseData.length < 4) {
         toastMessage("Please add atleast four expense statements.");
       } else {
-        //POST INCOME
-        try {
-          const incomeResponse = await userService.postIncome(income);
-          if (incomeResponse.status === 200) {
-            //POST EXPENSES
-            try {
-              const expenseDataResponse = await userService.postInitialExpences(
-                modifiedData,
-                dataToday
-              );
-              if (expenseDataResponse.status === 200) {
-                dispatch(setExpenseData(modifiedData));
-                dispatch(setCloseStatementModal());
-                toastMessage("Expense statements successfully added.");
+        if (totalPercentage <= 100) {
+          //POST INCOME
+          try {
+            const incomeResponse = await userService.postIncome(income);
+            if (incomeResponse.status === 200) {
+              //POST EXPENSES
+              try {
+                const expenseDataResponse =
+                  await userService.postInitialExpences(
+                    modifiedData,
+                    dataToday
+                  );
+                if (expenseDataResponse.status === 200) {
+                  dispatch(setExpenseData(modifiedData));
+                  dispatch(setCloseStatementModal());
+                  toastMessage("Expense statements successfully added.");
+                }
+              } catch (error) {
+                toastMessage("There was an error setting expense data.");
               }
-            } catch (error) {
-              toastMessage("There was an error setting expense data.");
             }
+          } catch (error) {
+            toastMessage("There was an error setting income.");
           }
-        } catch (error) {
-          toastMessage("There was an error setting income.");
+        } else {
+          toastMessage("Make sure the percentages add up to 100.");
         }
-
-        // console.log("income: ", income);
-        // console.log("dateToday: ", dataToday);
-        // console.log("modifiedData: ", modifiedData);
       }
     } else {
       toastMessage("Please complete all inputs in the form.");
