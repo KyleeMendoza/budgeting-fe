@@ -76,8 +76,17 @@ export default function ForecastModal() {
           <Text className="font-['Poppins-Regular'] text-xs">
             Click to generate ARIMA graph for forecasted budget.
           </Text>
+          <Text className="font-['Poppins-Regular'] text-xs italic text-red-600">
+            Note: You need to have atleast 3 entries for the forecast to work.
+          </Text>
           {arimaData.length! > 0 ? (
-            <ArimaLineChart data={arimaData} />
+            <>
+              <Text className="absolute left-0 top-1/2 -rotate-90">Amount</Text>
+              <View className="ml-4">
+                <ArimaLineChart data={arimaData} />
+              </View>
+              <Text className="absolute left-1/2 bottom-2">Day</Text>
+            </>
           ) : (
             <View className="mt-4">
               <Button
@@ -85,7 +94,6 @@ export default function ForecastModal() {
                 uppercase
                 onPress={() => {
                   setIsClicked(true);
-                  //   showArimaLineChart();
                 }}
                 style={{
                   borderRadius: 5,
@@ -113,7 +121,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    width: "90%",
+    width: "95%",
     backgroundColor: "white",
     borderRadius: 10,
     padding: 25,

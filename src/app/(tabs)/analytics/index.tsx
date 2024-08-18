@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Piechart from "@/components/Piechart";
 import { DropDown } from "@/components/DropDown";
@@ -26,6 +26,10 @@ export default function analytics() {
   const expenses = useSelector((state: IRootState) => state.user.expenses);
   const timeframe = useSelector((state: IRootState) => state.user.timeframe);
 
+  useEffect(() => {
+    console.log("expenses: ", expenses);
+  }, []);
+
   return (
     <View
       style={{
@@ -39,7 +43,6 @@ export default function analytics() {
             <View className="w-full flex flex-row justify-between items-center">
               <Text className="font-['Poppins-Bold'] text-xl">Analytics</Text>
               <View className="w-[30%]">
-                {/* <DropDown filter={dateFilter} setter={setValue} value={value} /> */}
                 <Button
                   mode="contained"
                   uppercase
@@ -82,7 +85,7 @@ export default function analytics() {
             <View className="area-container w-full h-80 rounded-2xl">
               <View className="w-full flex flex-row justify-between items-center">
                 <Text className="font-['Poppins-Bold'] text-lg">
-                  Budget Projection
+                  Expense Projection
                 </Text>
                 {timeframe ? null : (
                   <Text className="font-['Poppins-Regular'] text-sm italic">

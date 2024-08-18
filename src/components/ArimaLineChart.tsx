@@ -24,23 +24,36 @@ export default function ArimaLineChart({ data }) {
   );
 
   useEffect(() => {
-    const transformedArray = data.map((item) => ({
-      value: item.totalAmount,
-      labelComponent: () => lcomp(item.date),
-      customDataPoint: dPoint,
-    }));
+    const transformedArray = data.map((item) => {
+      let formattedLabel;
 
+      if (item.date.startsWith("Day")) {
+        formattedLabel = `D${item.date.replace("Day ", "")}`;
+      } else if (item.date.startsWith("Predicted")) {
+        formattedLabel = `P${item.date.replace("Predicted Day ", "")}`;
+      }
+
+      return {
+        value: item.totalAmount,
+        labelComponent: () => lcomp(formattedLabel),
+        customDataPoint: dPoint,
+      };
+    });
+
+    console.log("data: ", transformedArray);
     setArima(transformedArray);
   }, []);
 
   return (
     <View className="flex justify-center pt-8">
       <LineChart
+        curved
+        rotateLabel
         areaChart
         isAnimated
         thickness={3}
         startOpacity={1}
-        noOfSections={5}
+        noOfSections={6}
         data={arima ? arima : []}
         rulesType="solid"
         endOpacity={0.1}
