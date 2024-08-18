@@ -102,6 +102,20 @@ const getArimaGraph = async () => {
   }
 };
 
+//Saving Tips
+const getSmartTips = async (threshold: any) => {
+  const body = {
+    threshold,
+  };
+
+  try {
+    const response = await axios.post(`${baseURL}/mb/personal/tips`, body);
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export default {
   checkTimeFrame,
   postIncomeTimeframe,
@@ -112,4 +126,5 @@ export default {
   getUserSavingsAndExpense,
   getTimeframe,
   getArimaGraph,
+  getSmartTips,
 };

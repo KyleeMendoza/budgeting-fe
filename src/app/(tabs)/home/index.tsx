@@ -25,6 +25,7 @@ import {
 import TimeframeModal from "@/modals/TimeframeModal";
 import ForecastModal from "@/modals/ForecastModal";
 import SavingTipsModal from "@/modals/SavingTipsModal";
+import SmartTipsModal from "@/modals/SmartTipsModal";
 
 const icons = [
   {
@@ -159,6 +160,7 @@ export default function home() {
         <CreateExpensesModal />
         <ForecastModal />
         <SavingTipsModal />
+        <SmartTipsModal data={(expenses / (balance + expenses)) * 100} />
         <View className="main-container size-full flex items-center p-5 gap-8 bg-background">
           <View className="info-container w-full flex flex-row justify-between items-center ">
             <View>
